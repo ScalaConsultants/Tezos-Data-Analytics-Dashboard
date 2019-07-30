@@ -9,7 +9,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import './style.css';
 
-const ButtonAppBar = (props) => {
+const ButtonAppBar = (props: any) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
@@ -17,12 +17,12 @@ const ButtonAppBar = (props) => {
     { name: 'Transactions', route: '/transactions'}
   ];
 
-  const goTo = route => {
+  const goTo = (route: string) => {
     handleClose();
     props.history.push(route);
   };
 
-  const handleClick = event => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 
