@@ -8,8 +8,7 @@ const Home = (props: any) => {
 
   return (
     <div>
-      <h1>Welcome!!!</h1>
-      <p><a href="" onClick={() => goTo('/transactions')}>Get Transactions</a></p>
+      <h2>Welcome to Tezos Data Analytics Dashboard</h2>
     </div>
   );
 };
