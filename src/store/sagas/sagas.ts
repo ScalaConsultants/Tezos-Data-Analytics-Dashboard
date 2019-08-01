@@ -1,4 +1,4 @@
-import {takeEvery, put, fork} from 'redux-saga/effects';
+import {takeEvery, fork} from 'redux-saga/effects';
 import * as blokchainActions from '../actions/blokchain';
 import * as blokchainSagas from './blokchain';
 
