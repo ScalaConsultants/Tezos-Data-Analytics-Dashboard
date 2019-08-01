@@ -14,7 +14,8 @@ const ButtonAppBar = (props: any) => {
 
   const menuItems = [
     { name: 'Home', route: '/'},
-    { name: 'Transactions', route: '/transactions'}
+    { name: 'Transactions', route: '/transactions'},
+    { name: 'Charts', route: '/charts'}
   ];
 
   const goTo = (route: string) => {

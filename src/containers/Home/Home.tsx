@@ -1,11 +1,6 @@
 import React from 'react';
 
-const Home = (props: any) => {
-
-  // const goTo = (route: any) => {
-  //   props.history.push(route);
-  // };
-
+const Home = () => {
   return (
     <div>
       <h2>Welcome to Tezos Data Analytics Dashboard</h2>

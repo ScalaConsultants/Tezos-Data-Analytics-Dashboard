@@ -1,9 +1,27 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
-import BarChart from "../../components/charts/Bar/Bar";
-import LineChart from "../../components/charts/Line/Line";
-import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Grid from "@material-ui/core/Grid/Grid";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import TableSortLabel from "@material-ui/core/TableSortLabel/TableSortLabel";
+
+import {stableSort, getSorting} from "../../helpers/helpers";
+
+const headerCols = [
+  { id: 'timestamp', numeric: true, disablePadding: true, label: 'Timestamp' },
+  { id: 'source', numeric: false, disablePadding: false, label: 'Source' },
+  { id: 'destination', numeric: false, disablePadding: false, label: 'Destination' }
+];
+
+
+type Order = 'asc' | 'desc'
+type OrderBy = string;
+
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
@@ -12,6 +30,8 @@ const mapState = (state: any) => ({
 const Transactions = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<OrderBy>('name');
 
   useEffect(() => {
     const fetchTransactions = () => {
@@ -23,90 +43,70 @@ const Transactions = () => {
     fetchTransactions();
   }, [dispatch]);
 
-  const chartBarData = {
-    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
-    datasets: [
-      {
-        label: 'Amount',
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
-      }
-    ]
+  const createSortHandler = (property: any) => (event: any) => {
+    handleRequestSort(event, property);
   };
 
-  const chartLineData = {
-    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
-    datasets: [
-      {
-        label: 'Fee',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
-      }
-    ]
+  const handleRequestSort = (event: any, property: any) => {
+    if (orderBy === property && order === 'desc') {
+      setOrder('asc');
+    }
+    else if (orderBy === property && order === 'asc') {
+      setOrder('desc');
+    }
+    setOrderBy(property);
   };
-
-  const chartDoughnutData = {
-    labels: [
-      'Red',
-      'Green',
-      'Yellow'
-    ],
-    datasets: [{
-      data: [300, 50, 100],
-      backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56'
-      ],
-      hoverBackgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56'
-      ]
-    }]
-  };
-
 
   return (
-    <div>
-      <h1>Transactions:</h1>
-      {blokchain.slice(0, 10).map((item: any, index: any) => <div key={index}>{item.timestamp} {item.source} {item.destination} </div>)}
-      <h1>Charts:</h1>
-      <BarChart
-        data={chartBarData}
-        width={100}
-        height={200}
-        options={{
-          maintainAspectRatio: false
-        }}
-      />
-      <LineChart
-        data={chartLineData}
-      />
-      <DoughnutChart
-        data={chartDoughnutData}
-      />
-    </div>
+    <Grid container spacing={9} className="Container">
+      <Grid item xs={12} lg={12}>
+        <h1 id="client-manager-title" className="Transactions__header">Last 100 transactions</h1>
+      </Grid>
+      <Grid item xs={12} lg={12}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {headerCols.map(
+                row => (
+                  <TableCell
+                    key={row.id}
+                    align={row.numeric ? 'right' : 'left'}
+                    padding={row.disablePadding ? 'none' : 'default'}
+                    sortDirection={orderBy === row.id ? order : false}
+                  >
+                    <Tooltip
+                      title="Sort"
+                      placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                      enterDelay={300}
+                    >
+                      <TableSortLabel
+                        active={orderBy === row.id}
+                        direction={order}
+                        onClick={createSortHandler(row.id)}
+                      >
+                        {row.label}
+                      </TableSortLabel>
+                    </Tooltip>
+                  </TableCell>
+                )
+              )}
+              <TableCell/>
+              <TableCell/>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stableSort(blokchain.slice(0, 500), getSorting(order, orderBy))
+              .map((row: any, index: any) => (
+                <TableRow hover key={index}>
+                  <TableCell component="th" scope="row">{row.timestamp}</TableCell>
+                  <TableCell>{row.source}</TableCell>
+                  <TableCell>{row.destination}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </Grid>
+    </Grid>
   );
 };
 
