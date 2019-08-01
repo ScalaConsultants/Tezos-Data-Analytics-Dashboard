@@ -1,33 +1,30 @@
-import React, {useState, useEffect} from 'react';
-import {useDispatch, useMappedState} from 'redux-react-hook';
+import React, { useEffect } from 'react';
+import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
 import BarChart from "../../components/charts/Bar/Bar";
 import LineChart from "../../components/charts/Line/Line";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 
-
 const mapState = (state: any) => ({
   blokchain: state.blokchain
 });
-
-
 
 const Transactions = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
 
   useEffect(() => {
-    fetchTransactions();
-  }, []);
+    const fetchTransactions = () => {
+      dispatch({
+        type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
+      });
+    };
 
-  const fetchTransactions = () => {
-    dispatch({
-      type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
-    });
-  };
+    fetchTransactions();
+  }, [dispatch]);
 
   const chartBarData = {
-    labels: [...blokchain.slice(0, 30).map((item:any) => item.destination)],
+    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
     datasets: [
       {
         label: 'Amount',
@@ -36,13 +33,13 @@ const Transactions = () => {
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
         hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [...blokchain.slice(0, 30).map((item:any) => item.amount)]
+        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
       }
     ]
   };
 
   const chartLineData = {
-    labels: [...blokchain.slice(0, 30).map((item:any) => item.destination)],
+    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
     datasets: [
       {
         label: 'Fee',
@@ -63,7 +60,7 @@ const Transactions = () => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [...blokchain.slice(0, 30).map((item:any) => item.amount)]
+        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
       }
     ]
   };
@@ -77,18 +74,18 @@ const Transactions = () => {
     datasets: [{
       data: [300, 50, 100],
       backgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56'
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56'
       ],
       hoverBackgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56'
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56'
       ]
     }]
   };
-  
+
 
   return (
     <div>
@@ -100,7 +97,7 @@ const Transactions = () => {
         width={100}
         height={200}
         options={{
-        maintainAspectRatio: false
+          maintainAspectRatio: false
         }}
       />
       <LineChart

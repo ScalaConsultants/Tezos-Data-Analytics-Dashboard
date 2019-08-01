@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 const Home = (props: any) => {
 
-  const goTo = (route: any) => {
-    props.history.push(route);
-  };
+  // const goTo = (route: any) => {
+  //   props.history.push(route);
+  // };
 
   return (
     <div>
