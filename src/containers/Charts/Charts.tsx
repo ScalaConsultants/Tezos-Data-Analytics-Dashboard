@@ -171,21 +171,33 @@ const Charts = () => {
 
   const chartDoughnutData = {
     labels: [
-      'Red',
-      'Green',
-      'Yellow'
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
     ],
     datasets: [{
-      data: [300, 50, 100],
+      data: [300, 50, 100, 400, 600, 800, 50],
       backgroundColor: [
         '#FF6384',
         '#36A2EB',
-        '#FFCE56'
+        '#FFCE56',
+        '#a9fcff',
+        '#5af1d0',
+        '#290198',
+        '#ff000f'
       ],
       hoverBackgroundColor: [
         '#FF6384',
         '#36A2EB',
-        '#FFCE56'
+        '#FFCE56',
+        '#a9fcff',
+        '#5af1d0',
+        '#290198',
+        '#ff000f'
       ]
     }]
   };
@@ -233,6 +245,7 @@ const Charts = () => {
         options={{
           maintainAspectRatio: true
         }}
+        
       />
       <DoughnutChart
         data={chartDoughnutData}
