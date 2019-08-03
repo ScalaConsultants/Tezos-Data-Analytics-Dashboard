@@ -43,14 +43,14 @@ const Charts = () => {
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState('2019-08-01');
   const [dateTo, setDateTo] = useState('2019-08-15');
-  const [labelBar, setLabelBar] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
-  const [dataBar, setDataBar] = useState([10, 20, 30, 40]);
+  const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
+  const [data, setData] = useState([10, 20, 30, 40]);
 
-  const filterChartBar = (blokchain: any) => {
+  const filterChart = (blokchain: any) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
-    setLabelBar(dateArray);
+    setLabel(dateArray);
 
-    const chainArray:any = [];
+    const chainArray: any = [];
     dateArray.forEach((dateStamp: any) => {
       let elements = 0;
       blokchain.forEach((item: any) => {
@@ -62,7 +62,7 @@ const Charts = () => {
       chainArray.push(elements);
     });
 
-    setDataBar(chainArray);
+    setData(chainArray);
 
   }
 
@@ -85,13 +85,13 @@ const Charts = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    
-    filterChartBar(blokchain);
-   
-  } ,[dateTo, dateFrom]);
+
+    filterChart(blokchain);
+
+  }, [dateTo, dateFrom]);
 
   const chartBarData = {
-    labels: labelBar,
+    labels: label,
     datasets: [
       {
         label: 'Amount',
@@ -100,7 +100,7 @@ const Charts = () => {
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
         hoverBorderColor: 'rgba(255,99,132,1)',
-        data: dataBar
+        data: data
       }
     ]
   };
