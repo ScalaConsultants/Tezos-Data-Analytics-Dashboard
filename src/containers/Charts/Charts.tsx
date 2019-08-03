@@ -51,6 +51,7 @@ const Charts = () => {
     label: 'Transactions',
     title: 'Amount of transactions per day'
   });
+  const [select, setSelect] = useState('Select chart')
   
 
   const filterChart = (blokchain: any, chartType:string) => {
@@ -104,6 +105,7 @@ const Charts = () => {
   }
 
   const handleChartChange = (e:any) => {
+    setSelect(e.target.value)
     switch(e.target.value) {
       case 'transactions':
           setConfig({
@@ -152,6 +154,8 @@ const Charts = () => {
     filterChart(blokchain, config.chartType);
 
   }, [dateTo, dateFrom, config]);
+
+  
 
   const chartBarData = {
     labels: label,
@@ -227,7 +231,7 @@ const Charts = () => {
         <FormControl style={{width:'33%'}}>
         <InputLabel>Select chart</InputLabel>
         <Select
-         value={config.label}
+         value={select}
          onChange={(e) => handleChartChange(e)}
         >
           <MenuItem value='transactions'>Transactions</MenuItem>
