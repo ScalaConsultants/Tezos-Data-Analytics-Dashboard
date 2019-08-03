@@ -21,19 +21,17 @@ const convertTimeStamp = (date: any) => {
 }
 
 const convertDateArray = (dateFrom: any, dateTo: any) => {
-  var listDate = [];
-  var startDate = dateFrom.toString();
-  var endDate = dateTo.toString();
-  var dateMove = new Date(startDate);
-  var strDate = startDate;
+  let listDate = [];
+  let startDate = dateFrom.toString();
+  let endDate = dateTo.toString();
+  let dateMove = new Date(startDate);
+  let strDate = startDate;
 
   while (strDate < endDate) {
     strDate = dateMove.toISOString().slice(0, 10);
     listDate.push(strDate);
     dateMove.setDate(dateMove.getDate() + 1);
   };
-
-
 
   return listDate;
 }
