@@ -1,22 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
 import BarChart from "../../components/charts/Bar/Bar";
 import LineChart from "../../components/charts/Line/Line";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
 });
+
+const convertTimeStamp = (date: any) => {
+  const newDate = new Date(date);
+  const formattedDate =
+    ('0' + newDate.getDate())
+      .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
+        .slice(-2) + '-' + newDate.getFullYear();
+  return formattedDate;
+}
+
+const convertDateArray = (dateFrom: any, dateTo: any) => {
+  var listDate = [];
+  var startDate = dateFrom.toString();
+  var endDate = dateTo.toString();
+  console.log('test3', startDate, endDate)
+  var dateMove = new Date(startDate);
+  var strDate = startDate;
+
+  while (strDate < endDate) {
+    strDate = dateMove.toISOString().slice(0, 10);
+    listDate.push(strDate);
+    dateMove.setDate(dateMove.getDate() + 1);
+  };
+
+
+
+  return listDate;
+}
 
 const Charts = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState('19-04-2019');
   const [dateTo, setDateTo] = useState('19-04-2019');
+  const [labelBar, setLabelBar] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
+  const [dataBar, setDataBar] = useState([10, 20, 30, 40]);
 
+
+  const filterChartBar = () => {
+    const dateArray = convertDateArray(dateFrom, dateTo);
+    console.log(dateArray);
+    setLabelBar(dateArray);
+    setDataBar(Array(dateArray.length).fill(20));
+    convertTimeStamp('x');
+  }
+
+  const triggerSetDateFrom = (e: any) => {
+    setDateFrom(e.target.value);
+  }
+
+  const triggerSetDateTo = (e: any) => {
+    setDateTo(e.target.value);
+  }
 
   useEffect(() => {
     const fetchTransactions = () => {
@@ -28,8 +73,12 @@ const Charts = () => {
     fetchTransactions();
   }, [dispatch]);
 
+  useEffect(() => {
+    filterChartBar();
+  });
+
   const chartBarData = {
-    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
+    labels: labelBar,
     datasets: [
       {
         label: 'Amount',
@@ -38,7 +87,7 @@ const Charts = () => {
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
         hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
+        data: [10, 20, 30, 40]
       }
     ]
   };
@@ -94,29 +143,33 @@ const Charts = () => {
 
   return (
     <div>
-       <h1>Charts</h1>
-       <div style={{marginBottom: '50px'}}>
+      <h1>Charts</h1>
+      <div style={{ marginBottom: '50px' }}>
         <TextField
           id="date"
           label="Date From"
           type="date"
-          defaultValue="2017-05-24"
-          style={{marginRight:'50px'}}
+          name="dateFrom"
+          onChange={(e) => triggerSetDateFrom(e)}
+          defaultValue="2019-05-24"
+
 
         />
         <TextField
           id="date"
           label="Date To"
           type="date"
-          defaultValue="2017-05-24"
+          name="dateTo"
+          defaultValue="2019-05-24"
+          onChange={(e) => triggerSetDateTo(e)}
         />
       </div>
       <BarChart
         data={chartBarData}
         width={100}
-        height={200}
+        height={100}
         options={{
-          maintainAspectRatio: false
+          maintainAspectRatio: true
         }}
       />
       <LineChart
