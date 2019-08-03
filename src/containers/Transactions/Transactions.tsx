@@ -57,6 +57,8 @@ const Transactions = () => {
     setOrderBy(property);
   };
 
+  const timestampToDate = (timestamp: number) => new Date(timestamp);
+
   return (
     <Grid container spacing={9} className="Container">
       <Grid item xs={12} lg={12}>
@@ -95,7 +97,7 @@ const Transactions = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stableSort(blokchain.slice(0, 500), getSorting(order, orderBy))
+            {stableSort(blokchain.slice(0, 100), getSorting(order, orderBy))
               .map((row: any, index: any) => (
                 <TableRow hover key={index}>
                   <TableCell component="th" scope="row">{row.timestamp}</TableCell>
