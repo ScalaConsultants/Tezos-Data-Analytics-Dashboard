@@ -43,25 +43,49 @@ const Charts = () => {
   const [dateTo, setDateTo] = useState('2019-08-15');
   const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [data, setData] = useState([10, 20, 30, 40]);
+  let chartType = 'buyers';
 
-  const filterChart = (blokchain: any) => {
+  const filterChart = (blokchain: any, chartType:string) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
     const chainArray: any = [];
     dateArray.forEach((dateStamp: any) => {
       let elements = 0;
+      let tempArray = [];
+      let previousEl = 0;
       blokchain.forEach((item: any) => {
         const timeStampConverted = convertTimeStamp(item.timestamp);
         if (timeStampConverted == dateStamp) {
-          elements++;
+          switch(chartType) {
+            case 'transactions':
+              elements++;
+              break;
+            case 'selers':
+              if(item.source !== previousEl) {
+                tempArray.push(item.source);
+                previousEl = item.source;
+              }
+              elements = tempArray.length;
+              break;
+            case 'buyers':
+                if(item.destination !== previousEl) {
+                  tempArray.push(item.destination);
+                  previousEl = item.destination;
+                }
+                elements = tempArray.length;
+              break;
+            case 'currency':
+              // code block
+              break;
+            default:
+              // code block
+          }
         }
       })
       chainArray.push(elements);
     });
-
     setData(chainArray);
-
   }
 
   const triggerSetDateFrom = (e: any) => {
@@ -83,8 +107,7 @@ const Charts = () => {
   }, [dispatch]);
 
   useEffect(() => {
-
-    filterChart(blokchain);
+    filterChart(blokchain, chartType);
 
   }, [dateTo, dateFrom]);
 
@@ -103,32 +126,6 @@ const Charts = () => {
     ]
   };
 
-  const chartLineData = {
-    labels: [...blokchain.slice(0, 30).map((item: any) => item.destination)],
-    datasets: [
-      {
-        label: 'Fee',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [...blokchain.slice(0, 30).map((item: any) => item.amount)]
-      }
-    ]
-  };
 
   const chartDoughnutData = {
     labels: [
@@ -180,9 +177,6 @@ const Charts = () => {
         options={{
           maintainAspectRatio: true
         }}
-      />
-      <LineChart
-        data={chartLineData}
       />
       <DoughnutChart
         data={chartDoughnutData}
