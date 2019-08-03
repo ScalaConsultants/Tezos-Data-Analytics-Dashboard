@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {withRouter} from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
@@ -13,9 +13,10 @@ const ButtonAppBar = (props: any) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
-    { name: 'Home', route: '/'},
-    { name: 'Transactions', route: '/transactions'},
-    { name: 'Charts', route: '/charts'}
+    { name: 'Home', route: '/' },
+    { name: 'Transactions', route: '/transactions' },
+    { name: 'Charts', route: '/charts' },
+    { name: 'Live Chart', route: '/live-chart' },
   ];
 
   const goTo = (route: string) => {
@@ -32,31 +33,31 @@ const ButtonAppBar = (props: any) => {
   };
 
   return (
-      <AppBar position="static" className="MenuAppBar">
-        <Toolbar>
-          <IconButton
+    <AppBar position="static" className="MenuAppBar">
+      <Toolbar>
+        <IconButton
           aria-owns={anchorEl ? 'simple-menu' : undefined}
           aria-haspopup="true"
           color="inherit"
           onClick={handleClick}>
-            <MenuIcon/>
-          </IconButton>
-          <div className="MenuSpace">
-          </div>
-          <Button color="inherit" onClick={() => goTo('/')}>Tezos Data Analytics Dashboard v0.01</Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            {menuItems.map((item, key) => {
-              return <MenuItem onClick={() => goTo(item.route)} key={key}>{item.name}</MenuItem>
-            })}
-          </Menu>
-        </Toolbar>
-      </AppBar>
-    );
+          <MenuIcon />
+        </IconButton>
+        <div className="MenuSpace">
+        </div>
+        <Button color="inherit" onClick={() => goTo('/')}>Tezos Data Analytics Dashboard v0.01</Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {menuItems.map((item, key) => {
+            return <MenuItem onClick={() => goTo(item.route)} key={key}>{item.name}</MenuItem>
+          })}
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
 };
 
 export default withRouter(ButtonAppBar);
