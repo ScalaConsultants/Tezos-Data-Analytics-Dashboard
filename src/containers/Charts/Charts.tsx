@@ -2,9 +2,12 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
 import BarChart from "../../components/charts/Bar/Bar";
-import LineChart from "../../components/charts/Line/Line";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
@@ -43,7 +46,12 @@ const Charts = () => {
   const [dateTo, setDateTo] = useState('2019-08-15');
   const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [data, setData] = useState([10, 20, 30, 40]);
-  let chartType = 'currency';
+  const [config, setConfig] = useState({
+    chartType:'transactions',
+    label: 'Transactions',
+    title: 'Amount of transactions per day'
+  });
+  
 
   const filterChart = (blokchain: any, chartType:string) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
@@ -95,6 +103,41 @@ const Charts = () => {
     setDateTo(e.target.value);
   }
 
+  const handleChartChange = (e:any) => {
+    switch(e.target.value) {
+      case 'transactions':
+          setConfig({
+            chartType:'transactions',
+            label: 'Transactions',
+            title: 'Amount of transactions per day'
+          });
+          
+        break;
+      case 'selers':
+          setConfig({
+            chartType:'selers',
+            label: 'Selers',
+            title: 'Amount of selers per day'
+          });
+        break;
+      case 'buyers':
+          setConfig({
+            chartType:'buyers',
+            label: 'Buyers',
+            title: 'Amount of buyers per day'
+          });
+        break;
+      case 'currency':
+          setConfig({
+            chartType:'currency',
+            label: 'Currency',
+            title: 'Amount of currency sold per day'
+          });
+        break;
+      default:
+    }
+  }
+
   useEffect(() => {
     const fetchTransactions = () => {
       dispatch({
@@ -106,15 +149,15 @@ const Charts = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    filterChart(blokchain, chartType);
+    filterChart(blokchain, config.chartType);
 
-  }, [dateTo, dateFrom]);
+  }, [dateTo, dateFrom, config]);
 
   const chartBarData = {
     labels: label,
     datasets: [
       {
-        label: 'Amount',
+        label: config.label,
         backgroundColor: 'rgba(255,99,132,0.2)',
         borderColor: 'rgba(255,99,132,1)',
         borderWidth: 1,
@@ -150,8 +193,7 @@ const Charts = () => {
 
   return (
     <div>
-      <h1>Charts</h1>
-      <div style={{ marginBottom: '50px' }}>
+      <div style={{ marginBottom: '30px', marginTop: '30px' }}>
         <TextField
           id="date"
           label="Date From"
@@ -159,6 +201,7 @@ const Charts = () => {
           name="dateFrom"
           onChange={(e) => triggerSetDateFrom(e)}
           defaultValue="2019-08-01"
+          style={{width:'33%'}}
         />
         <TextField
           id="date"
@@ -167,8 +210,22 @@ const Charts = () => {
           name="dateTo"
           defaultValue="2019-08-15"
           onChange={(e) => triggerSetDateTo(e)}
+          style={{width:'33%',}}
         />
+        <FormControl style={{width:'33%'}}>
+        <InputLabel>Select chart</InputLabel>
+        <Select
+         value={config.label}
+         onChange={(e) => handleChartChange(e)}
+        >
+          <MenuItem value='transactions'>Transactions</MenuItem>
+          <MenuItem value='currency'>Currency</MenuItem>
+          <MenuItem value='buyers'>Buyers</MenuItem>
+          <MenuItem value='selers'>Sellers</MenuItem>
+        </Select>
+      </FormControl>
       </div>
+      <h1>{config.title}</h1>
       <BarChart
         data={chartBarData}
         width={100}
