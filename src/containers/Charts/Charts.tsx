@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
 import BarChart from "../../components/charts/Bar/Bar";
 import LineChart from "../../components/charts/Line/Line";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
@@ -12,6 +14,9 @@ const mapState = (state: any) => ({
 const Charts = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
+  const [dateFrom, setDateFrom] = useState('19-04-2019');
+  const [dateTo, setDateTo] = useState('19-04-2019');
+
 
   useEffect(() => {
     const fetchTransactions = () => {
@@ -90,6 +95,22 @@ const Charts = () => {
   return (
     <div>
        <h1>Charts</h1>
+       <div style={{marginBottom: '50px'}}>
+        <TextField
+          id="date"
+          label="Date From"
+          type="date"
+          defaultValue="2017-05-24"
+          style={{marginRight:'50px'}}
+
+        />
+        <TextField
+          id="date"
+          label="Date To"
+          type="date"
+          defaultValue="2017-05-24"
+        />
+      </div>
       <BarChart
         data={chartBarData}
         width={100}
