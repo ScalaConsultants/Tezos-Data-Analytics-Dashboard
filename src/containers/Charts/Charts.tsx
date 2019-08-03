@@ -43,7 +43,7 @@ const Charts = () => {
   const [dateTo, setDateTo] = useState('2019-08-15');
   const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [data, setData] = useState([10, 20, 30, 40]);
-  let chartType = 'buyers';
+  let chartType = 'currency';
 
   const filterChart = (blokchain: any, chartType:string) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
@@ -76,10 +76,9 @@ const Charts = () => {
                 elements = tempArray.length;
               break;
             case 'currency':
-              // code block
+                elements += item.amount;
               break;
             default:
-              // code block
           }
         }
       })
