@@ -16,14 +16,14 @@ const convertTimeStamp = (date: any) => {
     ('0' + newDate.getDate())
       .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
         .slice(-2) + '-' + newDate.getFullYear();
-  return formattedDate;
+
+  return formattedDate.split("-").reverse().join("-");;
 }
 
 const convertDateArray = (dateFrom: any, dateTo: any) => {
   var listDate = [];
   var startDate = dateFrom.toString();
   var endDate = dateTo.toString();
-  console.log('test3', startDate, endDate)
   var dateMove = new Date(startDate);
   var strDate = startDate;
 
@@ -41,18 +41,32 @@ const convertDateArray = (dateFrom: any, dateTo: any) => {
 const Charts = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
-  const [dateFrom, setDateFrom] = useState('19-04-2019');
-  const [dateTo, setDateTo] = useState('19-04-2019');
+  const [dateFrom, setDateFrom] = useState('2019-05-01');
+  const [dateTo, setDateTo] = useState('2019-05-30');
   const [labelBar, setLabelBar] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [dataBar, setDataBar] = useState([10, 20, 30, 40]);
 
 
-  const filterChartBar = () => {
+
+
+  const filterChartBar = (blokchain: any) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
-    console.log(dateArray);
     setLabelBar(dateArray);
-    setDataBar(Array(dateArray.length).fill(20));
-    convertTimeStamp('x');
+
+    const chainArray:any = [];
+    dateArray.forEach((dateStamp: any) => {
+      let elements = 0;
+      blokchain.forEach((item: any) => {
+        const timeStampConverted = convertTimeStamp(item.timestamp);
+        if (timeStampConverted == dateStamp) {
+          elements++;
+        }
+      })
+      chainArray.push(elements);
+    });
+
+    setDataBar(chainArray);
+
   }
 
   const triggerSetDateFrom = (e: any) => {
@@ -74,8 +88,10 @@ const Charts = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    filterChartBar();
-  });
+    
+    filterChartBar(blokchain);
+   
+  } ,[dateTo, dateFrom]);
 
   const chartBarData = {
     labels: labelBar,
@@ -87,7 +103,7 @@ const Charts = () => {
         borderWidth: 1,
         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
         hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [10, 20, 30, 40]
+        data: dataBar
       }
     ]
   };
@@ -151,7 +167,7 @@ const Charts = () => {
           type="date"
           name="dateFrom"
           onChange={(e) => triggerSetDateFrom(e)}
-          defaultValue="2019-05-24"
+          defaultValue="2019-05-01"
 
 
         />
@@ -160,7 +176,7 @@ const Charts = () => {
           label="Date To"
           type="date"
           name="dateTo"
-          defaultValue="2019-05-24"
+          defaultValue="2019-05-30"
           onChange={(e) => triggerSetDateTo(e)}
         />
       </div>
