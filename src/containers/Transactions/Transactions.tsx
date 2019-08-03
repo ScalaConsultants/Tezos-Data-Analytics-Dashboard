@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
 import Table from '@material-ui/core/Table';
@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import TableSortLabel from "@material-ui/core/TableSortLabel/TableSortLabel";
 
-import {stableSort, getSorting} from "../../helpers/helpers";
+import { stableSort, getSorting } from "../../helpers/helpers";
 
 const headerCols = [
   { id: 'timestamp', numeric: true, disablePadding: true, label: 'Timestamp' },
@@ -18,10 +18,8 @@ const headerCols = [
   { id: 'destination', numeric: false, disablePadding: false, label: 'Destination' }
 ];
 
-
 type Order = 'asc' | 'desc'
 type OrderBy = string;
-
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
@@ -92,8 +90,8 @@ const Transactions = () => {
                   </TableCell>
                 )
               )}
-              <TableCell/>
-              <TableCell/>
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
