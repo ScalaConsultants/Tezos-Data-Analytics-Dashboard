@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 
 const LiveChartBubble = (props: any): React.ReactElement => {
-  console.log(props);
   return (
     <Box
       p={1}
