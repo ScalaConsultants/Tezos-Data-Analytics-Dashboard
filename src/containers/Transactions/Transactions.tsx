@@ -54,8 +54,9 @@ const Transactions = (): React.ReactElement => {
       ('0' + newDate.getDate())
         .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
           .slice(-2) + '-' + newDate.getFullYear();
+    const dateWithHour = formattedDate.split("-").reverse().join("-") + ' ' + newDate.getHours()+':'+newDate.getMinutes()+':'+newDate.getSeconds();
 
-    return formattedDate.toString();
+    return dateWithHour.toString();
   }
 
   return (
