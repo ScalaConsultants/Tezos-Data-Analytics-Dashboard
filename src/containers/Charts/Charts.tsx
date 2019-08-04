@@ -177,7 +177,7 @@ const Charts = () => {
         setConfig({
           chartType: 'selers',
           label: 'Selers',
-          title: 'Amount of selers per day'
+          title: 'Amount of sellers per day'
         });
         break;
       case 'buyers':
