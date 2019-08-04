@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useMappedState } from "redux-react-hook";
-import * as BlokchainActions from "../../store/actions/blokchain";
+import { useMappedState } from "redux-react-hook";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LiveChartBubble from "../../components/LiveChart/LiveChartBubble";
@@ -27,23 +26,12 @@ const mapState = (state: any): any => ({
 });
 
 function LiveChart(): React.ReactElement {
-  const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [startDate, setStartDate] = useState(new Date());
 
   const handleChange = (date: Date): void => {
     setStartDate(date);
   };
-
-  useEffect((): void => {
-    const fetchTransactions = (): void => {
-      dispatch({
-        type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
-      });
-    };
-
-    fetchTransactions();
-  }, [dispatch]);
 
   if (!blokchain.length) return <CircularProgress />;
 

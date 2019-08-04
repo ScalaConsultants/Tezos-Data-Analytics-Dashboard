@@ -1,4 +1,4 @@
-import { put, call } from "redux-saga/effects";
+import { put, call, select, SimpleEffect } from "redux-saga/effects";
 import {
   ConseilDataClient,
   ConseilOperator,
@@ -8,6 +8,10 @@ import {
 
 import * as blokchainActions from "../actions/blokchain";
 
+function getLastTransaction(state: any): any {
+  return state.blokchain[state.blokchain.length - 1];
+}
+
 const conseilServerInfo = {
   url: `${process.env.REACT_APP_CONSEIL_URL}`,
   apiKey: `${process.env.REACT_APP_CONSEIL_KEY}`
@@ -16,10 +20,10 @@ const conseilServerInfo = {
 const platform = "tezos";
 const network = "alphanet";
 const entity = "operations";
-const initialFetchAmount = 10000;
+const consecutiveFetchAmount = 100;
 
-const fetchTransactionsRequest = async (): Promise<any> => {
-  console.log("fetching from counselj");
+const fetchMoreTransactionsRequest = async (): Promise<any> => {
+  console.log("Fetching more from counselijs");
 
   let transactionQuery = ConseilQueryBuilder.blankQuery();
   transactionQuery = ConseilQueryBuilder.addFields(
@@ -53,7 +57,7 @@ const fetchTransactionsRequest = async (): Promise<any> => {
   );
   transactionQuery = ConseilQueryBuilder.setLimit(
     transactionQuery,
-    initialFetchAmount
+    consecutiveFetchAmount
   );
 
   const result = await ConseilDataClient.executeEntityQuery(
@@ -70,10 +74,27 @@ const fetchTransactionsRequest = async (): Promise<any> => {
   return transactions;
 };
 
-export function* doFetchTransactions(): any {
-  const response = yield call(fetchTransactionsRequest);
-  if (response) yield put(blokchainActions.BlokchainSetTransactions(response));
-  else {
-    yield put(blokchainActions.BlokchainSetTransactions([]));
+export function* doFetchMoreTransactions(): any {
+  const lastTransactionFromState = yield select(getLastTransaction);
+
+  const response = yield call(fetchMoreTransactionsRequest);
+
+  // Compare timestamps and blockchain_level of the last transaction in current state to the transactions received from api
+  const sortedTransactions = response.sort(
+    (a: any, b: any): number => a.timestamp - b.timestamp // From oldest to newest
+  );
+  const startIndex = sortedTransactions.findIndex(
+    (st: any): boolean => st.timestamp > lastTransactionFromState.timestamp
+  );
+
+  // If api returned newer transactions
+  if (startIndex !== -1) {
+    const newTransactions = sortedTransactions.slice(
+      startIndex,
+      consecutiveFetchAmount
+    );
+    yield put(blokchainActions.BlokchainSetMoreTransactions(newTransactions));
+  } else {
+    console.log("There were no new transactions.");
   }
 }
