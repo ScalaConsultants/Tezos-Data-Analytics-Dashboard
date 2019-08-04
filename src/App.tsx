@@ -9,13 +9,14 @@ import "./App.css";
 const fetchMoreIntervalSeconds = 10;
 
 const mapState = (state: any) => ({
-  blokchain: state.blokchain
+  blokchain: state.blokchain,
+  loader: state.loader
 });
 
 
 const App = (): React.ReactElement => {
 
-  const { blokchain } = useMappedState(mapState);
+  const { blokchain, loader } = useMappedState(mapState);
 
   const dispatch = useDispatch();
 
@@ -42,7 +43,7 @@ const App = (): React.ReactElement => {
     <div className="App">
       <Router>
         <MenuAppBar />
-        {blokchain.length !=0 ?
+        {(blokchain.length !=0  && loader) ?
         <Routes />
         : 
         <div  style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100vh'}}>
