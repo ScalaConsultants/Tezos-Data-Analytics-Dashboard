@@ -16,7 +16,7 @@ const conseilServerInfo = {
 const platform = "tezos";
 const network = "alphanet";
 const entity = "operations";
-const initialFetchAmount = 10000;
+const initialFetchAmount = 500000;
 
 const fetchTransactionsRequest = async (): Promise<any> => {
   console.log("fetching from counselj");
