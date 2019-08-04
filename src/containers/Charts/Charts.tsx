@@ -102,7 +102,7 @@ const convertDateArray = (dateFrom: any, dateTo: any) => {
 const Charts = () => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
-  const [dateFrom, setDateFrom] = useState('2019-08-01');
+  const [dateFrom, setDateFrom] = useState('2019-07-25');
   const [dateTo, setDateTo] = useState('2019-08-15');
   const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [data, setData] = useState([10, 20, 30, 40]);
@@ -283,7 +283,7 @@ const Charts = () => {
             type="date"
             name="dateFrom"
             onChange={(e) => triggerSetDateFrom(e)}
-            defaultValue="2019-08-01"
+            defaultValue="2019-07-25"
             style={{ width: '33%' }}
           />
           <TextField
