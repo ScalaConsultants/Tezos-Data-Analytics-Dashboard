@@ -13,6 +13,13 @@ const mapState = (state: any) => ({
   blokchain: state.blokchain
 });
 
+
+const convertTimeStampToHour = (date: any) => {
+  const newDate = new Date(date);
+  const formattedDate = newDate.getHours();
+  return formattedDate;
+}
+
 const convertTimeStamp = (date: any) => {
   const newDate = new Date(date);
   const formattedDate =
@@ -21,6 +28,43 @@ const convertTimeStamp = (date: any) => {
         .slice(-2) + '-' + newDate.getFullYear();
 
   return formattedDate.split("-").reverse().join("-");;
+}
+
+const getDayTime = (hour: any) => {
+  if (hour > 6 && hour < 12) {
+    return 'morning';
+  }
+  if (hour > 12 && hour < 18) {
+    return 'afternoon';
+  }
+  if (hour > 18 && hour < 24) {
+    return 'afternoon';
+  }
+  if (hour > 0 && hour < 6) {
+    return 'night';
+  }
+}
+
+const selectWhichDayTime = (dayTime: any, array: any) => {
+  switch (dayTime) {
+    case 'morning':
+      array[0]++;
+      break;
+    case 'afternoon':
+      array[1]++;
+      break;
+    case 'night':
+      array[2]++;
+
+      break;
+    case 'evening':
+      array[3]++;
+
+      break;
+    default:
+  }
+
+  return array;
 }
 
 const convertDateArray = (dateFrom: any, dateTo: any) => {
@@ -47,45 +91,58 @@ const Charts = () => {
   const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
   const [data, setData] = useState([10, 20, 30, 40]);
   const [config, setConfig] = useState({
-    chartType:'transactions',
+    chartType: 'transactions',
     label: 'Transactions',
     title: 'Amount of transactions per day'
   });
-  const [select, setSelect] = useState('Select chart')
-  
+  const [select, setSelect] = useState('Select chart');
+  const [donutData, setDonutData] = useState([10, 40, 80, 200])
 
-  const filterChart = (blokchain: any, chartType:string) => {
+
+  const filterChart = (blokchain: any, chartType: string) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
     const chainArray: any = [];
+    let donutArray: any = [0,0,0,0];
+
     dateArray.forEach((dateStamp: any) => {
       let elements = 0;
       let tempArray = [];
       let previousEl = 0;
       blokchain.forEach((item: any) => {
         const timeStampConverted = convertTimeStamp(item.timestamp);
+        const timeStampHours = convertTimeStampToHour(item.timestamp);
+        const dayTime = getDayTime(timeStampHours);
+
         if (timeStampConverted == dateStamp) {
-          switch(chartType) {
+          switch (chartType) {
             case 'transactions':
               elements++;
+              donutArray = selectWhichDayTime(dayTime, donutArray);
               break;
             case 'selers':
-              if(item.source !== previousEl) {
+              if (item.source !== previousEl) {
                 tempArray.push(item.source);
                 previousEl = item.source;
+                donutArray = selectWhichDayTime(dayTime, donutArray);
               }
               elements = tempArray.length;
+
               break;
             case 'buyers':
-                if(item.destination !== previousEl) {
-                  tempArray.push(item.destination);
-                  previousEl = item.destination;
-                }
-                elements = tempArray.length;
+              if (item.destination !== previousEl) {
+                tempArray.push(item.destination);
+                previousEl = item.destination;
+                donutArray = selectWhichDayTime(dayTime, donutArray);
+              }
+              elements = tempArray.length;
+
               break;
             case 'currency':
-                elements += item.amount;
+              elements += item.amount;
+              donutArray = selectWhichDayTime(dayTime, donutArray);
+
               break;
             default:
           }
@@ -94,6 +151,7 @@ const Charts = () => {
       chainArray.push(elements);
     });
     setData(chainArray);
+    setDonutData(donutArray);
   }
 
   const triggerSetDateFrom = (e: any) => {
@@ -104,37 +162,37 @@ const Charts = () => {
     setDateTo(e.target.value);
   }
 
-  const handleChartChange = (e:any) => {
+  const handleChartChange = (e: any) => {
     setSelect(e.target.value)
-    switch(e.target.value) {
+    switch (e.target.value) {
       case 'transactions':
-          setConfig({
-            chartType:'transactions',
-            label: 'Transactions',
-            title: 'Amount of transactions per day'
-          });
-          
+        setConfig({
+          chartType: 'transactions',
+          label: 'Transactions',
+          title: 'Amount of transactions per day'
+        });
+
         break;
       case 'selers':
-          setConfig({
-            chartType:'selers',
-            label: 'Selers',
-            title: 'Amount of selers per day'
-          });
+        setConfig({
+          chartType: 'selers',
+          label: 'Selers',
+          title: 'Amount of selers per day'
+        });
         break;
       case 'buyers':
-          setConfig({
-            chartType:'buyers',
-            label: 'Buyers',
-            title: 'Amount of buyers per day'
-          });
+        setConfig({
+          chartType: 'buyers',
+          label: 'Buyers',
+          title: 'Amount of buyers per day'
+        });
         break;
       case 'currency':
-          setConfig({
-            chartType:'currency',
-            label: 'Currency',
-            title: 'Amount of currency sold per day'
-          });
+        setConfig({
+          chartType: 'currency',
+          label: 'Currency',
+          title: 'Amount of currency sold per day'
+        });
         break;
       default:
     }
@@ -155,7 +213,7 @@ const Charts = () => {
 
   }, [dateTo, dateFrom, config]);
 
-  
+
 
   const chartBarData = {
     labels: label,
@@ -175,33 +233,24 @@ const Charts = () => {
 
   const chartDoughnutData = {
     labels: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
+      'Morning',
+      'Night',
+      'Evening',
+      'Afternoon',
     ],
     datasets: [{
-      data: [300, 50, 100, 400, 600, 800, 50],
+      data: donutData,
       backgroundColor: [
         '#FF6384',
         '#36A2EB',
         '#FFCE56',
         '#a9fcff',
-        '#5af1d0',
-        '#290198',
-        '#ff000f'
       ],
       hoverBackgroundColor: [
         '#FF6384',
         '#36A2EB',
         '#FFCE56',
         '#a9fcff',
-        '#5af1d0',
-        '#290198',
-        '#ff000f'
       ]
     }]
   };
@@ -217,7 +266,7 @@ const Charts = () => {
           name="dateFrom"
           onChange={(e) => triggerSetDateFrom(e)}
           defaultValue="2019-08-01"
-          style={{width:'33%'}}
+          style={{ width: '33%' }}
         />
         <TextField
           id="date"
@@ -226,20 +275,20 @@ const Charts = () => {
           name="dateTo"
           defaultValue="2019-08-15"
           onChange={(e) => triggerSetDateTo(e)}
-          style={{width:'33%',}}
+          style={{ width: '33%', }}
         />
-        <FormControl style={{width:'33%'}}>
-        <InputLabel>Select chart</InputLabel>
-        <Select
-         value={select}
-         onChange={(e) => handleChartChange(e)}
-        >
-          <MenuItem value='transactions'>Transactions</MenuItem>
-          <MenuItem value='currency'>Currency</MenuItem>
-          <MenuItem value='buyers'>Buyers</MenuItem>
-          <MenuItem value='selers'>Sellers</MenuItem>
-        </Select>
-      </FormControl>
+        <FormControl style={{ width: '33%' }}>
+          <InputLabel>Select chart</InputLabel>
+          <Select
+            value={select}
+            onChange={(e) => handleChartChange(e)}
+          >
+            <MenuItem value='transactions'>Transactions</MenuItem>
+            <MenuItem value='currency'>Currency</MenuItem>
+            <MenuItem value='buyers'>Buyers</MenuItem>
+            <MenuItem value='selers'>Sellers</MenuItem>
+          </Select>
+        </FormControl>
       </div>
       <h1>{config.title}</h1>
       <BarChart
@@ -249,8 +298,9 @@ const Charts = () => {
         options={{
           maintainAspectRatio: true
         }}
-        
+
       />
+      <h1>Time of day</h1>
       <DoughnutChart
         data={chartDoughnutData}
       />
