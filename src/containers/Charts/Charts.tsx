@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import * as BlokchainActions from "../../store/actions/blokchain";
+import * as LoaderActions from "../../store/actions/loader";
 import BarChart from "../../components/charts/Bar/Bar";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 import TextField from '@material-ui/core/TextField';
@@ -168,6 +169,7 @@ const Charts = () => {
     });
     setData(chainArray);
     setDonutData(donutArray);
+
   }
 
   const triggerSetDateFrom = (e: any) => {
@@ -214,6 +216,21 @@ const Charts = () => {
     }
   }
 
+
+  const setLoaderFalse = () => {
+    console.log('dispatched')
+
+    dispatch({
+      type: LoaderActions.SET_LOADER_FALSE
+    });
+  };
+
+  const setLoaderTrue = () => {
+    dispatch({
+      type: LoaderActions.SET_LOADER_TRUE
+    });
+  };
+
   useEffect(() => {
     const fetchTransactions = () => {
       dispatch({
@@ -222,6 +239,7 @@ const Charts = () => {
     };
 
     fetchTransactions();
+    setLoaderTrue();
   }, [dispatch]);
 
   useEffect(() => {
@@ -299,7 +317,13 @@ const Charts = () => {
             <InputLabel>Select chart</InputLabel>
             <Select
               value={select}
-              onChange={(e) => handleChartChange(e)}
+              onChange={(e) => {
+                handleChartChange(e);
+                setLoaderFalse();
+                setTimeout(()=>setLoaderTrue(), 500 )
+              }
+              
+              }
             >
               <MenuItem value='transactions'>Transactions</MenuItem>
               <MenuItem value='currency'>Currency</MenuItem>

@@ -1,10 +1,12 @@
-import {createStore, combineReducers, applyMiddleware} from "redux";
-import createSagaMiddleware from 'redux-saga';
-import {composeWithDevTools} from "redux-devtools-extension";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-import {blokchain} from './reducers/blokchain'
+import { blokchain } from "./reducers/blokchain";
+import { loader } from "./reducers/loader";
 
 const rootReducer = combineReducers({
+  loader,
   blokchain
 });
 
@@ -14,7 +16,7 @@ export default function configureStore() {
   const middleWareEnhancer = applyMiddleware(...middlewares);
 
   return {
-    ...createStore(rootReducer,  composeWithDevTools(middleWareEnhancer)),
+    ...createStore(rootReducer, composeWithDevTools(middleWareEnhancer)),
     runSaga: sagaMiddleware.run
-  }
+  };
 }
