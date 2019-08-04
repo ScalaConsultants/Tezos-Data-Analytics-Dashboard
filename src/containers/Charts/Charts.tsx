@@ -31,16 +31,16 @@ const convertTimeStamp = (date: any) => {
 }
 
 const getDayTime = (hour: any) => {
-  if (hour > 6 && hour < 12) {
+  if (hour >= 6 && hour <= 12) {
     return 'morning';
   }
-  if (hour > 12 && hour < 18) {
+  if (hour > 12 && hour <= 18) {
     return 'afternoon';
   }
-  if (hour > 18 && hour < 23) {
+  if (hour > 18 && hour <= 23) {
     return 'evening';
   }
-  if (hour > 0 && hour < 6) {
+  if (hour >= 0 && hour < 6) {
     return 'night';
   }
 }
