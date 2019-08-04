@@ -12,7 +12,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel/TableSortLabel";
 import { stableSort, getSorting } from "../../helpers/helpers";
 
 const headerCols = [
-  { id: "timestamp", numeric: true, disablePadding: true, label: "Timestamp" },
+  { id: "timestamp", numeric: false, disablePadding: true, label: "Timestamp" },
   { id: "source", numeric: false, disablePadding: false, label: "Source" },
   {
     id: "destination",
@@ -48,7 +48,15 @@ const Transactions = (): React.ReactElement => {
     setOrderBy(property);
   };
 
-  const timestampToDate = (timestamp: number) => new Date(timestamp);
+  const timestampToDate = (timestamp: number) => {
+    const newDate = new Date(timestamp);
+    const formattedDate =
+      ('0' + newDate.getDate())
+        .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
+          .slice(-2) + '-' + newDate.getFullYear();
+
+    return formattedDate.toString();
+  }
 
   return (
     <Grid container spacing={9} className="Container">
@@ -94,7 +102,7 @@ const Transactions = (): React.ReactElement => {
             ).map((row: any, index: any) => (
               <TableRow hover key={index}>
                 <TableCell component="th" scope="row">
-                  {row.timestamp}
+                  {timestampToDate(row.timestamp)}
                 </TableCell>
                 <TableCell>{row.source}</TableCell>
                 <TableCell>{row.destination}</TableCell>
