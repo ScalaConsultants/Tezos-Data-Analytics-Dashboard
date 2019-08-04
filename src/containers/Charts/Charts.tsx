@@ -104,7 +104,7 @@ const Charts = () => {
     setLabel(dateArray);
 
     const chainArray: any = [];
-    let donutArray: any = [0,0,0,0];
+    let donutArray: any = [0, 0, 0, 0];
 
     dateArray.forEach((dateStamp: any) => {
       let elements = 0;
@@ -257,54 +257,58 @@ const Charts = () => {
 
 
   return (
-    <div>
-      <div style={{ marginBottom: '30px', marginTop: '30px' }}>
-        <TextField
-          id="date"
-          label="Date From"
-          type="date"
-          name="dateFrom"
-          onChange={(e) => triggerSetDateFrom(e)}
-          defaultValue="2019-08-01"
-          style={{ width: '33%' }}
-        />
-        <TextField
-          id="date"
-          label="Date To"
-          type="date"
-          name="dateTo"
-          defaultValue="2019-08-15"
-          onChange={(e) => triggerSetDateTo(e)}
-          style={{ width: '33%', }}
-        />
-        <FormControl style={{ width: '33%' }}>
-          <InputLabel>Select chart</InputLabel>
-          <Select
-            value={select}
-            onChange={(e) => handleChartChange(e)}
-          >
-            <MenuItem value='transactions'>Transactions</MenuItem>
-            <MenuItem value='currency'>Currency</MenuItem>
-            <MenuItem value='buyers'>Buyers</MenuItem>
-            <MenuItem value='selers'>Sellers</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-      <h1>{config.title}</h1>
-      <BarChart
-        data={chartBarData}
-        width={100}
-        height={100}
-        options={{
-          maintainAspectRatio: true
-        }}
+    <>
+        <div>
 
-      />
-      <h1>Time of day</h1>
-      <DoughnutChart
-        data={chartDoughnutData}
-      />
-    </div>
+          <div style={{ marginBottom: '30px', marginTop: '30px' }}>
+            <TextField
+              id="date"
+              label="Date From"
+              type="date"
+              name="dateFrom"
+              onChange={(e) => triggerSetDateFrom(e)}
+              defaultValue="2019-08-01"
+              style={{ width: '33%' }}
+            />
+            <TextField
+              id="date"
+              label="Date To"
+              type="date"
+              name="dateTo"
+              defaultValue="2019-08-15"
+              onChange={(e) => triggerSetDateTo(e)}
+              style={{ width: '33%', }}
+            />
+            <FormControl style={{ width: '33%' }}>
+              <InputLabel>Select chart</InputLabel>
+              <Select
+                value={select}
+                onChange={(e) => handleChartChange(e)}
+              >
+                <MenuItem value='transactions'>Transactions</MenuItem>
+                <MenuItem value='currency'>Currency</MenuItem>
+                <MenuItem value='buyers'>Buyers</MenuItem>
+                <MenuItem value='selers'>Sellers</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <h1>{config.title}</h1>
+          <BarChart
+            data={chartBarData}
+            width={100}
+            height={100}
+            options={{
+              maintainAspectRatio: true
+            }}
+
+          />
+          <h1>Time of day</h1>
+          <DoughnutChart
+            data={chartDoughnutData}
+          />
+
+        </div>
+    </>
   );
 };
 

@@ -2,13 +2,21 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./router/routes";
 import MenuAppBar from "./components/menuAppBar/MenuAppBar";
-import { useDispatch } from "redux-react-hook";
 import * as BlokchainActions from "./store/actions/blokchain";
+import { useDispatch, useMappedState } from 'redux-react-hook';
 import "./App.css";
 
 const fetchMoreIntervalSeconds = 10;
 
+const mapState = (state: any) => ({
+  blokchain: state.blokchain
+});
+
+
 const App = (): React.ReactElement => {
+
+  const { blokchain } = useMappedState(mapState);
+
   const dispatch = useDispatch();
 
   useEffect((): void => {
@@ -34,7 +42,13 @@ const App = (): React.ReactElement => {
     <div className="App">
       <Router>
         <MenuAppBar />
+        {blokchain.length !=0 ?
         <Routes />
+        : 
+        <div  style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100vh'}}>
+          <div className='loader'></div>
+        </div>
+        }
       </Router>
     </div>
   );
