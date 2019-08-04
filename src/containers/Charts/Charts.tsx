@@ -50,14 +50,14 @@ const selectWhichDayTime = (dayTime: any, array: any) => {
     case 'morning':
       array[0]++;
       break;
-    case 'afternoon':
+    case 'night':
       array[1]++;
       break;
-    case 'night':
+    case 'evening':
       array[2]++;
 
       break;
-    case 'evening':
+    case 'afternoon':
       array[3]++;
 
       break;
