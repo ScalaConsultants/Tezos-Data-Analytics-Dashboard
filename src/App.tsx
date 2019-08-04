@@ -5,22 +5,25 @@ import MenuAppBar from "./components/menuAppBar/MenuAppBar";
 import * as BlokchainActions from "./store/actions/blokchain";
 import { useDispatch, useMappedState } from 'redux-react-hook';
 import "./App.css";
+import Loader from "./components/loader/Loader";
 
-const fetchMoreIntervalSeconds = 10;
+// const fetchMoreIntervalSeconds = 10;
 
 const mapState = (state: any) => ({
-  blokchain: state.blokchain
+  blokchain: state.blokchain,
+  loader: state.loader
 });
-
 
 const App = (): React.ReactElement => {
 
-  const { blokchain } = useMappedState(mapState);
+  const { blokchain, loader } = useMappedState(mapState);
 
   const dispatch = useDispatch();
-
+  let dep = 0;
   useEffect((): void => {
     // Fetch initial blockchain e.g. 50k
+    if (blokchain.length) return;
+
     const fetchTransactions = (): void => {
       dispatch({
         type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
@@ -28,27 +31,22 @@ const App = (): React.ReactElement => {
     };
 
     // Fetch more transactions every specified amount of time
-    const fetchMoreTransactions = (): void => {
-      dispatch({
-        type: BlokchainActions.BLOKCHAIN_FETCH_MORE_TRANSACTIONS
-      });
-    };
+    // const fetchMoreTransactions = (): void => {
+    //   dispatch({
+    //     type: BlokchainActions.BLOKCHAIN_FETCH_MORE_TRANSACTIONS
+    //   });
+    // };
 
     fetchTransactions();
-    setInterval(fetchMoreTransactions, 1000 * fetchMoreIntervalSeconds);
-  }, [dispatch]);
+    // setInterval(fetchMoreTransactions, 1000 * fetchMoreIntervalSeconds);
+  }, [dep]);
 
   return (
     <div className="App">
       <Router>
         <MenuAppBar />
-        {blokchain.length !=0 ?
         <Routes />
-        : 
-        <div  style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100vh'}}>
-          <div className='loader'></div>
-        </div>
-        }
+        {loader ? <Loader /> : null}
       </Router>
     </div>
   );

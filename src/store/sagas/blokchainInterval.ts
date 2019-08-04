@@ -1,4 +1,4 @@
-import { put, call, select, SimpleEffect } from "redux-saga/effects";
+import { put, call, select } from "redux-saga/effects";
 import {
   ConseilDataClient,
   ConseilOperator,

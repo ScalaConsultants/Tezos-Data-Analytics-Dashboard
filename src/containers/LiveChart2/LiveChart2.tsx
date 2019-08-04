@@ -19,13 +19,14 @@ const mapState = (state: any): any => ({
   blokchain: state.blokchain
 });
 
-function LiveChart(): React.ReactElement {
+function LiveChart2(): React.ReactElement {
   const { blokchain } = useMappedState(mapState);
+  // const dispatch = useDispatch();
 
   if (!blokchain.length) return <div />;
 
   const summedTransactions = blokchain.reduce((acc: any, next: any): any => {
-    const foundIndex = acc.findIndex((a: any) => a.source === next.source);
+    const foundIndex = acc.findIndex((a: any) => a.destination === next.destination);
     if (foundIndex !== -1) {
       acc[foundIndex].transactions++;
     } else {
@@ -42,7 +43,8 @@ function LiveChart(): React.ReactElement {
 
   return (
     <React.Fragment>
-      <h1>Top seller (amount of transactions)</h1>
+      {/*<DatePicker selected={startDate} onChange={handleChange} />*/}
+      <h1>Top buyer (amount of transactions)</h1>
       <Box
         display="flex"
         flexWrap="wrap"
@@ -59,7 +61,7 @@ function LiveChart(): React.ReactElement {
             <LiveChartBubble
               key={i}
               amount={b.amount}
-              source={b.source}
+              source={b.destination}
               transactions={b.transactions}
               size={
                 i === 0
@@ -75,4 +77,4 @@ function LiveChart(): React.ReactElement {
   );
 }
 
-export default LiveChart;
+export default LiveChart2;

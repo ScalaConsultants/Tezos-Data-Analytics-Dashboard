@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMappedState } from "redux-react-hook";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -35,10 +35,6 @@ const Transactions = (): React.ReactElement => {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<OrderBy>("name");
 
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
   const handleRequestSort = (event: any, property: any) => {
     if (orderBy === property && order === "desc") {
       setOrder("asc");
@@ -47,6 +43,12 @@ const Transactions = (): React.ReactElement => {
     }
     setOrderBy(property);
   };
+
+  const createSortHandler = (property: any) => (event: any) => {
+    handleRequestSort(event, property);
+  };
+
+
 
   const timestampToDate = (timestamp: number) => {
     const newDate = new Date(timestamp);
