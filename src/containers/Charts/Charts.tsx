@@ -45,20 +45,36 @@ const getDayTime = (hour: any) => {
   }
 }
 
-const selectWhichDayTime = (dayTime: any, array: any) => {
+const selectWhichDayTime = (dayTime: any, array: any, item: any, config: any) => {
   switch (dayTime) {
     case 'morning':
-      array[0]++;
+      if (config.chartType == 'currency') {
+        array[0] += item.amount;
+      } else {
+        array[0]++;
+      }
       break;
     case 'night':
-      array[1]++;
+      if (config.chartType == 'currency') {
+        array[1] += item.amount;
+      } else {
+        array[1]++;
+      }
       break;
     case 'evening':
-      array[2]++;
+      if (config.chartType == 'currency') {
+        array[2] += item.amount;
+      } else {
+        array[2]++;
+      }
 
       break;
     case 'afternoon':
-      array[3]++;
+      if (config.chartType == 'currency') {
+        array[3] += item.amount;
+      } else {
+        array[3]++;
+      }
 
       break;
     default:
@@ -119,13 +135,13 @@ const Charts = () => {
           switch (chartType) {
             case 'transactions':
               elements++;
-              donutArray = selectWhichDayTime(dayTime, donutArray);
+              donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
               break;
             case 'selers':
               if (item.source !== previousEl) {
                 tempArray.push(item.source);
                 previousEl = item.source;
-                donutArray = selectWhichDayTime(dayTime, donutArray);
+                donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
               }
               elements = tempArray.length;
 
@@ -134,14 +150,14 @@ const Charts = () => {
               if (item.destination !== previousEl) {
                 tempArray.push(item.destination);
                 previousEl = item.destination;
-                donutArray = selectWhichDayTime(dayTime, donutArray);
+                donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
               }
               elements = tempArray.length;
 
               break;
             case 'currency':
               elements += item.amount;
-              donutArray = selectWhichDayTime(dayTime, donutArray);
+              donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
 
               break;
             default:
@@ -258,56 +274,56 @@ const Charts = () => {
 
   return (
     <>
-        <div>
+      <div>
 
-          <div style={{ marginBottom: '30px', marginTop: '30px' }}>
-            <TextField
-              id="date"
-              label="Date From"
-              type="date"
-              name="dateFrom"
-              onChange={(e) => triggerSetDateFrom(e)}
-              defaultValue="2019-08-01"
-              style={{ width: '33%' }}
-            />
-            <TextField
-              id="date"
-              label="Date To"
-              type="date"
-              name="dateTo"
-              defaultValue="2019-08-15"
-              onChange={(e) => triggerSetDateTo(e)}
-              style={{ width: '33%', }}
-            />
-            <FormControl style={{ width: '33%' }}>
-              <InputLabel>Select chart</InputLabel>
-              <Select
-                value={select}
-                onChange={(e) => handleChartChange(e)}
-              >
-                <MenuItem value='transactions'>Transactions</MenuItem>
-                <MenuItem value='currency'>Currency</MenuItem>
-                <MenuItem value='buyers'>Buyers</MenuItem>
-                <MenuItem value='selers'>Sellers</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <h1>{config.title}</h1>
-          <BarChart
-            data={chartBarData}
-            width={100}
-            height={100}
-            options={{
-              maintainAspectRatio: true
-            }}
-
+        <div style={{ marginBottom: '30px', marginTop: '30px' }}>
+          <TextField
+            id="date"
+            label="Date From"
+            type="date"
+            name="dateFrom"
+            onChange={(e) => triggerSetDateFrom(e)}
+            defaultValue="2019-08-01"
+            style={{ width: '33%' }}
           />
-          <h1>Time of day</h1>
-          <DoughnutChart
-            data={chartDoughnutData}
+          <TextField
+            id="date"
+            label="Date To"
+            type="date"
+            name="dateTo"
+            defaultValue="2019-08-15"
+            onChange={(e) => triggerSetDateTo(e)}
+            style={{ width: '33%', }}
           />
-
+          <FormControl style={{ width: '33%' }}>
+            <InputLabel>Select chart</InputLabel>
+            <Select
+              value={select}
+              onChange={(e) => handleChartChange(e)}
+            >
+              <MenuItem value='transactions'>Transactions</MenuItem>
+              <MenuItem value='currency'>Currency</MenuItem>
+              <MenuItem value='buyers'>Buyers</MenuItem>
+              <MenuItem value='selers'>Sellers</MenuItem>
+            </Select>
+          </FormControl>
         </div>
+        <h1>{config.title}</h1>
+        <BarChart
+          data={chartBarData}
+          width={100}
+          height={100}
+          options={{
+            maintainAspectRatio: true
+          }}
+
+        />
+        <h1>Time of day</h1>
+        <DoughnutChart
+          data={chartDoughnutData}
+        />
+
+      </div>
     </>
   );
 };
