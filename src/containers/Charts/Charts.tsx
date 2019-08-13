@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useMappedState } from "redux-react-hook";
+import { useMappedState, useDispatch } from "redux-react-hook";
 import BarChart from "../../components/charts/Bar/Bar";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 import TextField from "@material-ui/core/TextField";
@@ -7,6 +7,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import * as LoaderActions from "../../store/actions/loader";
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
@@ -108,7 +109,7 @@ const convertDateArray = (dateFrom: any, dateTo: any) => {
 };
 
 const Charts = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState("2019-07-25");
   const [dateTo, setDateTo] = useState("2019-08-15");
@@ -200,6 +201,7 @@ const Charts = () => {
     });
     setData(chainArray);
     setDonutData(donutArray);
+    setLoaderFalse();
   };
 
   const triggerSetDateFrom = (e: any) => {
@@ -210,7 +212,23 @@ const Charts = () => {
     setDateTo(e.target.value);
   };
 
+  const setLoaderFalse = () => {
+    dispatch({
+      type: 'LOADER_STATE',
+      show: false
+    });
+  };
+
+  const setLoaderTrue = () => {
+    dispatch({
+      type: 'LOADER_STATE',
+      show: true
+    });
+  };
+
   const handleChartChange = (e: any) => {
+    setLoaderTrue();
+
     setSelect(e.target.value);
     switch (e.target.value) {
       case "transactions":
@@ -245,16 +263,6 @@ const Charts = () => {
       default:
     }
   };
-
-  // useEffect(() => {
-  //   const fetchTransactions = () => {
-  //     dispatch({
-  //       type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
-  //     });
-  //   };
-  //
-  //   fetchTransactions();
-  // }, [dispatch]);
 
   useEffect(() => {
     filterChart(blokchain, config.chartType);
@@ -310,7 +318,10 @@ const Charts = () => {
           />
           <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
-            <Select value={select} onChange={e => handleChartChange(e)}>
+            <Select value={select} onChange={e => {
+              setTimeout(()=> handleChartChange(e), 100);
+            }
+            }>
               <MenuItem value="transactions">Transactions</MenuItem>
               <MenuItem value="currency">Currency</MenuItem>
               <MenuItem value="buyers">Buyers</MenuItem>
