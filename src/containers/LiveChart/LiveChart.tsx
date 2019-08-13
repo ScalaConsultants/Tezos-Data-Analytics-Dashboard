@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMappedState } from "redux-react-hook";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LiveChartBubble from "../../components/LiveChart/LiveChartBubble";
+import DatePicker from "../../components/DatePicker/DatePicker";
 import { colors } from "../../helpers/colors";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 const MIN_SIZE = 70; //px;
 const MAX_SIZE = 300; //px;
@@ -17,20 +16,18 @@ function calculateSize(max: number, transactions: number): number {
   return size;
 }
 
-function getRandNum(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
 const mapState = (state: any): any => ({
   blokchain: state.blokchain
 });
 
 function LiveChart(): React.ReactElement {
   const { blokchain } = useMappedState(mapState);
-  const [startDate, setStartDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
+    new Date()
+  );
 
-  const handleChange = (date: Date): void => {
-    setStartDate(date);
+  const handleDateChange = (date: Date | null): void => {
+    setSelectedDate(date);
   };
 
   if (!blokchain.length) return <CircularProgress />;
@@ -53,7 +50,11 @@ function LiveChart(): React.ReactElement {
 
   return (
     <React.Fragment>
-      <DatePicker selected={startDate} onChange={handleChange} />
+      <DatePicker
+        date={selectedDate}
+        handleDateChange={handleDateChange}
+        label="From"
+      />
       <Box
         display="flex"
         flexWrap="wrap"
@@ -76,7 +77,7 @@ function LiveChart(): React.ReactElement {
                   ? MAX_SIZE
                   : calculateSize(mostTransactions, b.transactions)
               }
-              color={colors[getRandNum(0, colors.length - 1)]}
+              color={colors[i % colors.length]}
             />
           )
         )}
