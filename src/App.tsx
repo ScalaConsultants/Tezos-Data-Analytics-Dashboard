@@ -41,7 +41,7 @@ const App = (): React.ReactElement => {
     <div className="App">
       <Router>
         <MenuAppBar />
-        {blokchain.length != 0 && loader ? (
+        {blokchain.length !== 0 && loader ? (
           <Routes />
         ) : (
           <div

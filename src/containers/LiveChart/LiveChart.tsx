@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMappedState } from "redux-react-hook";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
