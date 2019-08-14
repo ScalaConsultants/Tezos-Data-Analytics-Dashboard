@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^4.3.4",
     "chart.js": "^2.8.0",
     "conseiljs": "^0.2.6",
+    "eslint-plugin-react-hooks": "^1.6.1",
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",

@@ -6,8 +6,8 @@ import { blokchain } from "./reducers/blokchain";
 import { loader } from "./reducers/loader";
 
 const rootReducer = combineReducers({
-  loader,
-  blokchain
+  blokchain,
+  loader
 });
 
 export default function configureStore() {

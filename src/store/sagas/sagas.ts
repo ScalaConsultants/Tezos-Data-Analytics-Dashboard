@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 import { takeEvery, fork } from "redux-saga/effects";
+=======
+import {
+  takeEvery,
+  fork
+} from "redux-saga/effects";
+>>>>>>> origin/development-fixed
 import * as blokchainActions from "../actions/blokchain";
 import * as blokchainSagas from "./blokchain";
 import * as blokchainIntervalSagas from "./blokchainInterval";

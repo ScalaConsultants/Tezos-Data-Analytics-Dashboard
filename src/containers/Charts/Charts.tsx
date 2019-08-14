@@ -1,77 +1,84 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import { useDispatch, useMappedState } from 'redux-react-hook';
-import * as BlokchainActions from "../../store/actions/blokchain";
-import * as LoaderActions from "../../store/actions/loader";
+import React, { useEffect, useState } from "react";
+import { useMappedState } from "redux-react-hook";
 import BarChart from "../../components/charts/Bar/Bar";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain
 });
 
-
 const convertTimeStampToHour = (date: any) => {
   const newDate = new Date(date);
   const formattedDate = newDate.getHours();
   return formattedDate;
-}
+};
 
 const convertTimeStamp = (date: any) => {
   const newDate = new Date(date);
   const formattedDate =
-    ('0' + newDate.getDate())
-      .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
-        .slice(-2) + '-' + newDate.getFullYear();
+    ("0" + newDate.getDate()).slice(-2) +
+    "-" +
+    ("0" + (newDate.getMonth() + 1)).slice(-2) +
+    "-" +
+    newDate.getFullYear();
 
-  return formattedDate.split("-").reverse().join("-");;
-}
+  return formattedDate
+    .split("-")
+    .reverse()
+    .join("-");
+};
 
 const getDayTime = (hour: any) => {
   if (hour >= 6 && hour <= 12) {
-    return 'morning';
+    return "morning";
   }
   if (hour > 12 && hour <= 18) {
-    return 'afternoon';
+    return "afternoon";
   }
   if (hour > 18 && hour <= 23) {
-    return 'evening';
+    return "evening";
   }
   if (hour >= 0 && hour < 6) {
-    return 'night';
+    return "night";
   }
-}
+};
 
-const selectWhichDayTime = (dayTime: any, array: any, item: any, config: any) => {
+const selectWhichDayTime = (
+  dayTime: any,
+  array: any,
+  item: any,
+  config: any
+) => {
   switch (dayTime) {
-    case 'morning':
-      if (config.chartType == 'currency') {
+    case "morning":
+      if (config.chartType === "currency") {
         array[0] += item.amount;
       } else {
         array[0]++;
       }
       break;
-    case 'night':
-      if (config.chartType == 'currency') {
+    case "night":
+      if (config.chartType === "currency") {
         array[1] += item.amount;
       } else {
         array[1]++;
       }
       break;
-    case 'evening':
-      if (config.chartType == 'currency') {
+    case "evening":
+      if (config.chartType === "currency") {
         array[2] += item.amount;
       } else {
         array[2]++;
       }
 
       break;
-    case 'afternoon':
-      if (config.chartType == 'currency') {
+    case "afternoon":
+      if (config.chartType === "currency") {
         array[3] += item.amount;
       } else {
         array[3]++;
@@ -82,7 +89,7 @@ const selectWhichDayTime = (dayTime: any, array: any, item: any, config: any) =>
   }
 
   return array;
-}
+};
 
 const convertDateArray = (dateFrom: any, dateTo: any) => {
   let listDate = [];
@@ -95,26 +102,30 @@ const convertDateArray = (dateFrom: any, dateTo: any) => {
     strDate = dateMove.toISOString().slice(0, 10);
     listDate.push(strDate);
     dateMove.setDate(dateMove.getDate() + 1);
-  };
+  }
 
   return listDate;
-}
+};
 
 const Charts = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
-  const [dateFrom, setDateFrom] = useState('2019-07-25');
-  const [dateTo, setDateTo] = useState('2019-08-15');
-  const [label, setLabel] = useState(['19-04-2019', '20-04-2019', '21-04-2019', '22-04-2019']);
+  const [dateFrom, setDateFrom] = useState("2019-07-25");
+  const [dateTo, setDateTo] = useState("2019-08-15");
+  const [label, setLabel] = useState([
+    "19-04-2019",
+    "20-04-2019",
+    "21-04-2019",
+    "22-04-2019"
+  ]);
   const [data, setData] = useState([10, 20, 30, 40]);
   const [config, setConfig] = useState({
-    chartType: 'transactions',
-    label: 'Transactions',
-    title: 'Amount of transactions per day'
+    chartType: "transactions",
+    label: "Transactions",
+    title: "Amount of transactions per day"
   });
-  const [select, setSelect] = useState('Select chart');
-  const [donutData, setDonutData] = useState([10, 40, 80, 200])
-
+  const [select, setSelect] = useState("transactions");
+  const [donutData, setDonutData] = useState([10, 40, 80, 200]);
 
   const filterChart = (blokchain: any, chartType: string) => {
     const dateArray = convertDateArray(dateFrom, dateTo);
@@ -132,177 +143,161 @@ const Charts = () => {
         const timeStampHours = convertTimeStampToHour(item.timestamp);
         const dayTime = getDayTime(timeStampHours);
 
-        if (timeStampConverted == dateStamp) {
+        if (timeStampConverted === dateStamp) {
           switch (chartType) {
-            case 'transactions':
+            case "transactions":
               elements++;
-              donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
+              donutArray = selectWhichDayTime(
+                dayTime,
+                donutArray,
+                item,
+                config
+              );
               break;
-            case 'selers':
+            case "selers":
               if (item.source !== previousEl) {
                 tempArray.push(item.source);
                 previousEl = item.source;
-                donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
+                donutArray = selectWhichDayTime(
+                  dayTime,
+                  donutArray,
+                  item,
+                  config
+                );
               }
               elements = tempArray.length;
 
               break;
-            case 'buyers':
+            case "buyers":
               if (item.destination !== previousEl) {
                 tempArray.push(item.destination);
                 previousEl = item.destination;
-                donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
+                donutArray = selectWhichDayTime(
+                  dayTime,
+                  donutArray,
+                  item,
+                  config
+                );
               }
               elements = tempArray.length;
 
               break;
-            case 'currency':
+            case "currency":
               elements += item.amount;
-              donutArray = selectWhichDayTime(dayTime, donutArray, item, config);
+              donutArray = selectWhichDayTime(
+                dayTime,
+                donutArray,
+                item,
+                config
+              );
 
               break;
             default:
           }
         }
-      })
+      });
       chainArray.push(elements);
     });
     setData(chainArray);
     setDonutData(donutArray);
-
-  }
+  };
 
   const triggerSetDateFrom = (e: any) => {
     setDateFrom(e.target.value);
-  }
+  };
 
   const triggerSetDateTo = (e: any) => {
     setDateTo(e.target.value);
-  }
+  };
 
   const handleChartChange = (e: any) => {
-    setSelect(e.target.value)
+    setSelect(e.target.value);
     switch (e.target.value) {
-      case 'transactions':
+      case "transactions":
         setConfig({
-          chartType: 'transactions',
-          label: 'Transactions',
-          title: 'Amount of transactions per day'
+          chartType: "transactions",
+          label: "Transactions",
+          title: "Amount of transactions per day"
         });
 
         break;
-      case 'selers':
+      case "selers":
         setConfig({
-          chartType: 'selers',
-          label: 'Selers',
-          title: 'Amount of sellers per day'
+          chartType: "selers",
+          label: "Selers",
+          title: "Amount of sellers per day"
         });
         break;
-      case 'buyers':
+      case "buyers":
         setConfig({
-          chartType: 'buyers',
-          label: 'Buyers',
-          title: 'Amount of buyers per day'
+          chartType: "buyers",
+          label: "Buyers",
+          title: "Amount of buyers per day"
         });
         break;
-      case 'currency':
+      case "currency":
         setConfig({
-          chartType: 'currency',
-          label: 'Currency',
-          title: 'Amount of currency sold per day'
+          chartType: "currency",
+          label: "Currency",
+          title: "Amount of currency sold per day"
         });
         break;
       default:
     }
-  }
-
-
-  const setLoaderFalse = () => {
-    console.log('dispatched')
-
-    dispatch({
-      type: LoaderActions.SET_LOADER_FALSE
-    });
   };
 
-  const setLoaderTrue = () => {
-    dispatch({
-      type: LoaderActions.SET_LOADER_TRUE
-    });
-  };
-
-  useEffect(() => {
-    const fetchTransactions = () => {
-      dispatch({
-        type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
-      });
-    };
-
-    fetchTransactions();
-    setLoaderTrue();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const fetchTransactions = () => {
+  //     dispatch({
+  //       type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
+  //     });
+  //   };
+  //
+  //   fetchTransactions();
+  // }, [dispatch]);
 
   useEffect(() => {
     filterChart(blokchain, config.chartType);
-
-  }, [dateTo, dateFrom, config]);
-
-
+  }, [dateTo, dateFrom, config, blokchain]);
 
   const chartBarData = {
     labels: label,
     datasets: [
       {
         label: config.label,
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
+        backgroundColor: "rgba(255,99,132,0.2)",
+        borderColor: "rgba(255,99,132,1)",
         borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
+        hoverBackgroundColor: "rgba(255,99,132,0.4)",
+        hoverBorderColor: "rgba(255,99,132,1)",
         data: data
       }
     ]
   };
 
-
   const chartDoughnutData = {
-    labels: [
-      'Morning',
-      'Night',
-      'Evening',
-      'Afternoon',
-    ],
-    datasets: [{
-      data: donutData,
-      backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-        '#a9fcff',
-      ],
-      hoverBackgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-        '#a9fcff',
-      ]
-    }]
+    labels: ["Morning", "Night", "Evening", "Afternoon"],
+    datasets: [
+      {
+        data: donutData,
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#a9fcff"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#a9fcff"]
+      }
+    ]
   };
-
 
   return (
     <>
       <div>
-
-        <div style={{ marginBottom: '30px', marginTop: '30px' }}>
+        <div style={{ marginBottom: "30px", marginTop: "30px" }}>
           <TextField
             id="date"
             label="Date From"
             type="date"
             name="dateFrom"
-            onChange={(e) => triggerSetDateFrom(e)}
+            onChange={e => triggerSetDateFrom(e)}
             defaultValue="2019-07-25"
-            style={{ width: '33%' }}
+            style={{ width: "33%" }}
           />
           <TextField
             id="date"
@@ -310,25 +305,16 @@ const Charts = () => {
             type="date"
             name="dateTo"
             defaultValue="2019-08-15"
-            onChange={(e) => triggerSetDateTo(e)}
-            style={{ width: '33%', }}
+            onChange={e => triggerSetDateTo(e)}
+            style={{ width: "33%" }}
           />
-          <FormControl style={{ width: '33%' }}>
+          <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
-            <Select
-              value={select}
-              onChange={(e) => {
-                handleChartChange(e);
-                setLoaderFalse();
-                setTimeout(()=>setLoaderTrue(), 500 )
-              }
-              
-              }
-            >
-              <MenuItem value='transactions'>Transactions</MenuItem>
-              <MenuItem value='currency'>Currency</MenuItem>
-              <MenuItem value='buyers'>Buyers</MenuItem>
-              <MenuItem value='selers'>Sellers</MenuItem>
+            <Select value={select} onChange={e => handleChartChange(e)}>
+              <MenuItem value="transactions">Transactions</MenuItem>
+              <MenuItem value="currency">Currency</MenuItem>
+              <MenuItem value="buyers">Buyers</MenuItem>
+              <MenuItem value="selers">Sellers</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -340,13 +326,9 @@ const Charts = () => {
           options={{
             maintainAspectRatio: true
           }}
-
         />
         <h1>Time of day</h1>
-        <DoughnutChart
-          data={chartDoughnutData}
-        />
-
+        <DoughnutChart data={chartDoughnutData} />
       </div>
     </>
   );
