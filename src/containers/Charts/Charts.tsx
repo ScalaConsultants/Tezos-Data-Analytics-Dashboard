@@ -239,7 +239,7 @@ const Charts = (): React.ReactElement => {
             </Select>
           </FormControl>
         </div>
-        <h1>{config.title}</h1>
+        <h1 style={{ textAlign: "center" }}>{config.title}</h1>
         <BarChart
           data={chartBarData}
           width={100}
@@ -248,7 +248,7 @@ const Charts = (): React.ReactElement => {
             maintainAspectRatio: true
           }}
         />
-        <h1>Time of day</h1>
+        <h1 style={{ textAlign: "center" }}>Time of day</h1>
         <DoughnutChart data={chartDoughnutData} />
       </div>
     </>
