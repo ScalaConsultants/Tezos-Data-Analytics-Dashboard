@@ -1,4 +1,4 @@
-import {Config} from './types';
+import {Config, Block} from './types';
 
 export const convertTimeStampToHour = (date: string): number => {
     const newDate = new Date(date);
@@ -40,8 +40,8 @@ export const getDayTime = (hour: number): string => {
 
 export const selectWhichDayTime = (
     dayTime: string,
-    array: any,
-    item: any,
+    array: Array<number>,
+    item: Block,
     config: Config
 ): Array<number> => {
     switch (dayTime) {
