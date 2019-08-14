@@ -13,10 +13,11 @@ const ButtonAppBar = (props: any): React.ReactElement => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
-    { name: "Home", route: "/" },
-    { name: "Transactions", route: "/transactions" },
-    { name: "Charts", route: "/charts" },
-    { name: "Live Chart", route: "/live-chart" }
+    { name: 'Home', route: '/' },
+    { name: 'Transactions', route: '/transactions' },
+    { name: 'Charts', route: '/charts' },
+    { name: 'Top seller', route: '/top-seller' },
+    { name: 'Top buyer', route: '/top-buyer' }
   ];
 
   const goTo = (route: string): void => {

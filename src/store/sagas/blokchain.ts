@@ -8,11 +8,12 @@ import {
 
 import apiConfig from "./api-config";
 import * as blokchainActions from "../actions/blokchain";
+import * as loaderActions from "../actions/loader";
 
 const initialFetchAmount = 100000;
 
 const fetchTransactionsRequest = async (): Promise<any> => {
-  console.log("fetching from counselj");
+  console.log("fetching from Conseil API");
 
   let transactionQuery = ConseilQueryBuilder.blankQuery();
   transactionQuery = ConseilQueryBuilder.addFields(
@@ -64,7 +65,9 @@ const fetchTransactionsRequest = async (): Promise<any> => {
 };
 
 export function* doFetchTransactions(): any {
+  yield put(loaderActions.LoaderState(true));
   const response = yield call(fetchTransactionsRequest);
+  yield put(loaderActions.LoaderState(false));
   if (response) yield put(blokchainActions.BlokchainSetTransactions(response));
   else {
     yield put(blokchainActions.BlokchainSetTransactions([]));

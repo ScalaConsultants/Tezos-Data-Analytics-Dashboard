@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { useMappedState, useDispatch } from "redux-react-hook";
+import React from "react";
+import { useMappedState } from "redux-react-hook";
 import Box from "@material-ui/core/Box";
 import LiveChartBubble from "../../components/LiveChart/LiveChartBubble";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import * as BlokchainActions from "../../store/actions/blokchain";
 import { colors } from "../../helpers/colors";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -18,50 +16,35 @@ function calculateSize(max: number, transactions: number): number {
 }
 
 const mapState = (state: any): any => ({
-  summedBlocks: state.blokchain.summedBlocks,
-  blocks: state.blokchain.blocks
+  blokchain: state.blokchain
 });
 
-function LiveChart(): React.ReactElement {
-  const { summedBlocks, blocks } = useMappedState(mapState);
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date()
-  );
-  const dispatch = useDispatch();
+function LiveChart2(): React.ReactElement {
+  const { blokchain } = useMappedState(mapState);
+  // const dispatch = useDispatch();
 
-  const handleDateChange = (date: Date | null): void => {
-    setSelectedDate(date);
-  };
+  if (!blokchain.length) return <div />;
 
-  const sumBlocksByOwner = (): void => {
-    dispatch({
-      type: BlokchainActions.BLOKCHAIN_SUM_TRANSACTIONS,
-      payload: {
-        blocks
-      }
-    });
-  };
+  const summedTransactions = blokchain.reduce((acc: any, next: any): any => {
+    const foundIndex = acc.findIndex((a: any) => a.destination === next.destination);
+    if (foundIndex !== -1) {
+      acc[foundIndex].transactions++;
+    } else {
+      next.transactions = 1;
+      acc.push(next);
+    }
 
-  if (blocks.length === 0) {
-    return <CircularProgress />;
-  }
-
-
-  if (!Object.keys(summedBlocks).length) {
-    sumBlocksByOwner();
-    return <CircularProgress />;
-  }
-
-  const transactionsToDisplay = summedBlocks.slice(0, 50);
+    return acc;
+  }, []);
+  const transactionsToDisplay = summedTransactions
+    .sort((a: any, b: any): number => b.transactions - a.transactions)
+    .slice(0, 50);
   const mostTransactions = transactionsToDisplay[0].transactions;
 
   return (
     <React.Fragment>
-      <DatePicker
-        date={selectedDate}
-        handleDateChange={handleDateChange}
-        label="From"
-      />
+      {/*<DatePicker selected={startDate} onChange={handleChange} />*/}
+      <h1>Top buyer (amount of transactions)</h1>
       <Box
         display="flex"
         flexWrap="wrap"
@@ -78,7 +61,7 @@ function LiveChart(): React.ReactElement {
             <LiveChartBubble
               key={i}
               amount={b.amount}
-              source={b.source}
+              source={b.destination}
               transactions={b.transactions}
               size={
                 i === 0
@@ -94,4 +77,4 @@ function LiveChart(): React.ReactElement {
   );
 }
 
-export default LiveChart;
+export default LiveChart2;
