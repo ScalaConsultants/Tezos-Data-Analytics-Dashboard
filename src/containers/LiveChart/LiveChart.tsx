@@ -4,10 +4,7 @@ import Box from "@material-ui/core/Box";
 import LiveChartBubble from "../../components/LiveChart/LiveChartBubble";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import { colors } from "../../helpers/colors";
-<<<<<<< HEAD
-=======
 import "react-datepicker/dist/react-datepicker.css";
->>>>>>> origin/development-fixed
 
 const MIN_SIZE = 70; //px;
 const MAX_SIZE = 300; //px;
@@ -53,15 +50,11 @@ function LiveChart(): React.ReactElement {
 
   return (
     <React.Fragment>
-<<<<<<< HEAD
       <DatePicker
         date={selectedDate}
         handleDateChange={handleDateChange}
         label="From"
       />
-=======
-      <h1>Top seller (amount of transactions)</h1>
->>>>>>> origin/development-fixed
       <Box
         display="flex"
         flexWrap="wrap"
