@@ -7,3 +7,10 @@ export interface Config {
 export interface State {
     blokchain: Array<string>;
 }
+
+
+export interface EventTarget {
+    target: {
+        value:string;
+    }
+}
