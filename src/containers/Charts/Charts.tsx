@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useMappedState } from "redux-react-hook";
+import { useMappedState, useDispatch } from "redux-react-hook";
+
 import BarChart from "../../components/charts/Bar/Bar";
 import DoughnutChart from "../../components/charts/Doughnut/Doughnut";
 import TextField from "@material-ui/core/TextField";
@@ -7,108 +8,17 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import * as LoaderActions from "../../store/actions/loader";
 
-const mapState = (state: any) => ({
+import { Config, State, EventTarget } from './types';
+import { convertTimeStampToHour, convertTimeStamp, getDayTime, selectWhichDayTime, convertDateArray } from './helpers';
+
+const mapState = (state: State): State => ({
   blokchain: state.blokchain
 });
 
-const convertTimeStampToHour = (date: any) => {
-  const newDate = new Date(date);
-  const formattedDate = newDate.getHours();
-  return formattedDate;
-};
-
-const convertTimeStamp = (date: any) => {
-  const newDate = new Date(date);
-  const formattedDate =
-    ("0" + newDate.getDate()).slice(-2) +
-    "-" +
-    ("0" + (newDate.getMonth() + 1)).slice(-2) +
-    "-" +
-    newDate.getFullYear();
-
-  return formattedDate
-    .split("-")
-    .reverse()
-    .join("-");
-};
-
-const getDayTime = (hour: any) => {
-  if (hour >= 6 && hour <= 12) {
-    return "morning";
-  }
-  if (hour > 12 && hour <= 18) {
-    return "afternoon";
-  }
-  if (hour > 18 && hour <= 23) {
-    return "evening";
-  }
-  if (hour >= 0 && hour < 6) {
-    return "night";
-  }
-};
-
-const selectWhichDayTime = (
-  dayTime: any,
-  array: any,
-  item: any,
-  config: any
-) => {
-  switch (dayTime) {
-    case "morning":
-      if (config.chartType === "currency") {
-        array[0] += item.amount;
-      } else {
-        array[0]++;
-      }
-      break;
-    case "night":
-      if (config.chartType === "currency") {
-        array[1] += item.amount;
-      } else {
-        array[1]++;
-      }
-      break;
-    case "evening":
-      if (config.chartType === "currency") {
-        array[2] += item.amount;
-      } else {
-        array[2]++;
-      }
-
-      break;
-    case "afternoon":
-      if (config.chartType === "currency") {
-        array[3] += item.amount;
-      } else {
-        array[3]++;
-      }
-
-      break;
-    default:
-  }
-
-  return array;
-};
-
-const convertDateArray = (dateFrom: any, dateTo: any) => {
-  let listDate = [];
-  let startDate = dateFrom.toString();
-  let endDate = dateTo.toString();
-  let dateMove = new Date(startDate);
-  let strDate = startDate;
-
-  while (strDate < endDate) {
-    strDate = dateMove.toISOString().slice(0, 10);
-    listDate.push(strDate);
-    dateMove.setDate(dateMove.getDate() + 1);
-  }
-
-  return listDate;
-};
-
 const Charts = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState("2019-07-25");
   const [dateTo, setDateTo] = useState("2019-08-15");
@@ -127,7 +37,7 @@ const Charts = () => {
   const [select, setSelect] = useState("transactions");
   const [donutData, setDonutData] = useState([10, 40, 80, 200]);
 
-  const filterChart = (blokchain: any, chartType: string) => {
+  const filterChart = (blokchain: any, chartType: string): void => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
@@ -200,17 +110,34 @@ const Charts = () => {
     });
     setData(chainArray);
     setDonutData(donutArray);
+    setLoaderFalse();
   };
 
-  const triggerSetDateFrom = (e: any) => {
+  const triggerSetDateFrom = (e: EventTarget): void => {
     setDateFrom(e.target.value);
   };
 
-  const triggerSetDateTo = (e: any) => {
+  const triggerSetDateTo = (e: EventTarget): void => {
     setDateTo(e.target.value);
   };
 
-  const handleChartChange = (e: any) => {
+  const setLoaderFalse = (): void => {
+    dispatch({
+      type: 'LOADER_STATE',
+      show: false
+    });
+  };
+
+  const setLoaderTrue = (): void => {
+    dispatch({
+      type: 'LOADER_STATE',
+      show: true
+    });
+  };
+
+  const handleChartChange = (e: any): void => {
+    setLoaderTrue();
+
     setSelect(e.target.value);
     switch (e.target.value) {
       case "transactions":
@@ -245,16 +172,6 @@ const Charts = () => {
       default:
     }
   };
-
-  // useEffect(() => {
-  //   const fetchTransactions = () => {
-  //     dispatch({
-  //       type: BlokchainActions.BLOKCHAIN_FETCH_TRANSACTIONS
-  //     });
-  //   };
-  //
-  //   fetchTransactions();
-  // }, [dispatch]);
 
   useEffect(() => {
     filterChart(blokchain, config.chartType);
@@ -310,7 +227,10 @@ const Charts = () => {
           />
           <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
-            <Select value={select} onChange={e => handleChartChange(e)}>
+            <Select value={select} onChange={(e) => {
+              setTimeout(() => handleChartChange(e), 100);
+            }
+            }>
               <MenuItem value="transactions">Transactions</MenuItem>
               <MenuItem value="currency">Currency</MenuItem>
               <MenuItem value="buyers">Buyers</MenuItem>
