@@ -8,18 +8,19 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as LoaderActions from "../../store/actions/loader";
+import { Config, State } from './types';
 
-const mapState = (state: any) => ({
+const mapState = (state: State): State => ({
   blokchain: state.blokchain
 });
 
-const convertTimeStampToHour = (date: any) => {
+const convertTimeStampToHour = (date: string):number => {
   const newDate = new Date(date);
   const formattedDate = newDate.getHours();
   return formattedDate;
 };
 
-const convertTimeStamp = (date: any) => {
+const convertTimeStamp = (date: string):string => {
   const newDate = new Date(date);
   const formattedDate =
     ("0" + newDate.getDate()).slice(-2) +
@@ -34,7 +35,7 @@ const convertTimeStamp = (date: any) => {
     .join("-");
 };
 
-const getDayTime = (hour: any) => {
+const getDayTime = (hour: number):string => {
   if (hour >= 6 && hour <= 12) {
     return "morning";
   }
@@ -47,14 +48,16 @@ const getDayTime = (hour: any) => {
   if (hour >= 0 && hour < 6) {
     return "night";
   }
+
+  return '';
 };
 
 const selectWhichDayTime = (
-  dayTime: any,
+  dayTime: string,
   array: any,
   item: any,
-  config: any
-) => {
+  config: Config
+):Array<number> => {
   switch (dayTime) {
     case "morning":
       if (config.chartType === "currency") {
@@ -92,7 +95,7 @@ const selectWhichDayTime = (
   return array;
 };
 
-const convertDateArray = (dateFrom: any, dateTo: any) => {
+const convertDateArray = (dateFrom: string, dateTo: string):Array<string> => {
   let listDate = [];
   let startDate = dateFrom.toString();
   let endDate = dateTo.toString();
@@ -128,7 +131,7 @@ const Charts = () => {
   const [select, setSelect] = useState("transactions");
   const [donutData, setDonutData] = useState([10, 40, 80, 200]);
 
-  const filterChart = (blokchain: any, chartType: string) => {
+  const filterChart = (blokchain: any, chartType: string):void => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
@@ -204,29 +207,29 @@ const Charts = () => {
     setLoaderFalse();
   };
 
-  const triggerSetDateFrom = (e: any) => {
+  const triggerSetDateFrom = (e: any):void => {
     setDateFrom(e.target.value);
   };
 
-  const triggerSetDateTo = (e: any) => {
+  const triggerSetDateTo = (e: any):void => {
     setDateTo(e.target.value);
   };
 
-  const setLoaderFalse = () => {
+  const setLoaderFalse = ():void => {
     dispatch({
       type: 'LOADER_STATE',
       show: false
     });
   };
 
-  const setLoaderTrue = () => {
+  const setLoaderTrue = ():void => {
     dispatch({
       type: 'LOADER_STATE',
       show: true
     });
   };
 
-  const handleChartChange = (e: any) => {
+  const handleChartChange = (e: any):void => {
     setLoaderTrue();
 
     setSelect(e.target.value);
