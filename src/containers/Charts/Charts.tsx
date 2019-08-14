@@ -10,14 +10,20 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as LoaderActions from "../../store/actions/loader";
 
-import { Config, State, EventTarget } from './types';
-import { convertTimeStampToHour, convertTimeStamp, getDayTime, selectWhichDayTime, convertDateArray } from './helpers';
+import { Config, State, EventTarget } from "./types";
+import {
+  convertTimeStampToHour,
+  convertTimeStamp,
+  getDayTime,
+  selectWhichDayTime,
+  convertDateArray
+} from "./helpers";
 
 const mapState = (state: State): State => ({
-  blokchain: state.blokchain
+  blokchain: state.blokchain.blocks
 });
 
-const Charts = () => {
+const Charts = (): React.ReactElement => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState("2019-07-25");
@@ -44,11 +50,11 @@ const Charts = () => {
     const chainArray: any = [];
     let donutArray: any = [0, 0, 0, 0];
 
-    dateArray.forEach((dateStamp: any) => {
+    dateArray.forEach((dateStamp: any): void => {
       let elements = 0;
       let tempArray = [];
       let previousEl = 0;
-      blokchain.forEach((item: any) => {
+      blokchain.forEach((item: any): void => {
         const timeStampConverted = convertTimeStamp(item.timestamp);
         const timeStampHours = convertTimeStampToHour(item.timestamp);
         const dayTime = getDayTime(timeStampHours);
@@ -123,14 +129,14 @@ const Charts = () => {
 
   const setLoaderFalse = (): void => {
     dispatch({
-      type: 'LOADER_STATE',
+      type: "LOADER_STATE",
       show: false
     });
   };
 
   const setLoaderTrue = (): void => {
     dispatch({
-      type: 'LOADER_STATE',
+      type: "LOADER_STATE",
       show: true
     });
   };
@@ -227,10 +233,12 @@ const Charts = () => {
           />
           <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
-            <Select value={select} onChange={(e) => {
-              setTimeout(() => handleChartChange(e), 100);
-            }
-            }>
+            <Select
+              value={select}
+              onChange={e => {
+                setTimeout(() => handleChartChange(e), 100);
+              }}
+            >
               <MenuItem value="transactions">Transactions</MenuItem>
               <MenuItem value="currency">Currency</MenuItem>
               <MenuItem value="buyers">Buyers</MenuItem>
