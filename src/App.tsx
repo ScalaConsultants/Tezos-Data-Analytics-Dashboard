@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./router/routes";
 import MenuAppBar from "./components/menuAppBar/MenuAppBar";
 import * as BlokchainActions from "./store/actions/blokchain";
-import { useDispatch, useMappedState } from 'redux-react-hook';
+import { useDispatch, useMappedState } from "redux-react-hook";
 import "./App.css";
 import Loader from "./components/loader/Loader";
 
@@ -15,7 +15,6 @@ const mapState = (state: any) => ({
 });
 
 const App = (): React.ReactElement => {
-
   const { blokchain, loader } = useMappedState(mapState);
 
   const dispatch = useDispatch();

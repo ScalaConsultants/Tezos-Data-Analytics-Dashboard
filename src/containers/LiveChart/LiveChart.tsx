@@ -2,6 +2,7 @@ import React from "react";
 import { useMappedState } from "redux-react-hook";
 import Box from "@material-ui/core/Box";
 import LiveChartBubble from "../../components/LiveChart/LiveChartBubble";
+import DatePicker from "../../components/DatePicker/DatePicker";
 import { colors } from "../../helpers/colors";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -21,6 +22,13 @@ const mapState = (state: any): any => ({
 
 function LiveChart(): React.ReactElement {
   const { blokchain } = useMappedState(mapState);
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
+    new Date()
+  );
+
+  const handleDateChange = (date: Date | null): void => {
+    setSelectedDate(date);
+  };
 
   if (!blokchain.length) return <div />;
 
@@ -42,7 +50,11 @@ function LiveChart(): React.ReactElement {
 
   return (
     <React.Fragment>
-      <h1>Top seller (amount of transactions)</h1>
+      <DatePicker
+        date={selectedDate}
+        handleDateChange={handleDateChange}
+        label="From"
+      />
       <Box
         display="flex"
         flexWrap="wrap"

@@ -53,13 +53,25 @@ const Transactions = (): React.ReactElement => {
   const timestampToDate = (timestamp: number) => {
     const newDate = new Date(timestamp);
     const formattedDate =
-      ('0' + newDate.getDate())
-        .slice(-2) + '-' + ('0' + (newDate.getMonth() + 1))
-          .slice(-2) + '-' + newDate.getFullYear();
-    const dateWithHour = formattedDate.split("-").reverse().join("-") + ' ' + newDate.getHours()+':'+newDate.getMinutes()+':'+newDate.getSeconds();
+      ("0" + newDate.getDate()).slice(-2) +
+      "-" +
+      ("0" + (newDate.getMonth() + 1)).slice(-2) +
+      "-" +
+      newDate.getFullYear();
+    const dateWithHour =
+      formattedDate
+        .split("-")
+        .reverse()
+        .join("-") +
+      " " +
+      newDate.getHours() +
+      ":" +
+      newDate.getMinutes() +
+      ":" +
+      newDate.getSeconds();
 
     return dateWithHour.toString();
-  }
+  };
 
   return (
     <Grid container spacing={9} className="Container">

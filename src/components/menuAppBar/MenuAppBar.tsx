@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import './style.css';
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import "./style.css";
 
-const ButtonAppBar = (props: any) => {
+const ButtonAppBar = (props: any): React.ReactElement => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
@@ -20,16 +20,16 @@ const ButtonAppBar = (props: any) => {
     { name: 'Top buyer', route: '/top-buyer' }
   ];
 
-  const goTo = (route: string) => {
+  const goTo = (route: string): void => {
     handleClose();
     props.history.push(route);
   };
 
-  const handleClick = (event: any) => {
+  const handleClick = (event: any): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setAnchorEl(null);
   };
 
@@ -37,15 +37,17 @@ const ButtonAppBar = (props: any) => {
     <AppBar position="static" className="MenuAppBar">
       <Toolbar>
         <IconButton
-          aria-owns={anchorEl ? 'simple-menu' : undefined}
+          aria-owns={anchorEl ? "simple-menu" : undefined}
           aria-haspopup="true"
           color="inherit"
-          onClick={handleClick}>
+          onClick={handleClick}
+        >
           <MenuIcon />
         </IconButton>
-        <div className="MenuSpace">
-        </div>
-        <Button color="inherit" onClick={() => goTo('/')}>Tezos Data Analytics Dashboard v0.01</Button>
+        <div className="MenuSpace"></div>
+        <Button color="inherit" onClick={() => goTo("/")}>
+          Tezos Data Analytics Dashboard v0.01
+        </Button>
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}
@@ -53,7 +55,11 @@ const ButtonAppBar = (props: any) => {
           onClose={handleClose}
         >
           {menuItems.map((item, key) => {
-            return <MenuItem onClick={() => goTo(item.route)} key={key}>{item.name}</MenuItem>
+            return (
+              <MenuItem onClick={() => goTo(item.route)} key={key}>
+                {item.name}
+              </MenuItem>
+            );
           })}
         </Menu>
       </Toolbar>
