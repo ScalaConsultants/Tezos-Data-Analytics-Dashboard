@@ -7,7 +7,7 @@ import { useDispatch, useMappedState } from "redux-react-hook";
 import "./App.css";
 import Loader from "./components/loader/Loader";
 
-// const fetchMoreIntervalSeconds = 10;
+const fetchMoreIntervalSeconds = 10;
 
 const mapState = (state: any) => ({
   blokchain: state.blokchain,
@@ -30,14 +30,14 @@ const App = (): React.ReactElement => {
     };
 
     // Fetch more transactions every specified amount of time
-    // const fetchMoreTransactions = (): void => {
-    //   dispatch({
-    //     type: BlokchainActions.BLOKCHAIN_FETCH_MORE_TRANSACTIONS
-    //   });
-    // };
+    const fetchMoreTransactions = (): void => {
+      dispatch({
+        type: BlokchainActions.BLOKCHAIN_FETCH_MORE_TRANSACTIONS
+      });
+    };
 
     fetchTransactions();
-    // setInterval(fetchMoreTransactions, 1000 * fetchMoreIntervalSeconds);
+    setInterval(fetchMoreTransactions, 1000 * fetchMoreIntervalSeconds);
   }, [dep]);
 
   return (

@@ -27,7 +27,22 @@ function LiveChart(): React.ReactElement {
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     new Date()
   );
+  const [showLoader, setShowLoader] = React.useState(true);
   const dispatch = useDispatch();
+
+  const setLoaderFalse = (): void => {
+    dispatch({
+      type: "LOADER_STATE",
+      show: false
+    });
+  };
+
+  const setLoaderTrue = (): void => {
+    dispatch({
+      type: "LOADER_STATE",
+      show: true
+    });
+  };
 
   const handleDateChange = (date: Date | null): void => {
     setSelectedDate(date);
@@ -42,14 +57,13 @@ function LiveChart(): React.ReactElement {
     });
   };
 
-  if (blocks.length === 0) {
-    return <CircularProgress />;
+  if (!blocks.length) {
+    return <div />;
   }
-
 
   if (!Object.keys(summedBlocks).length) {
     sumBlocksByOwner();
-    return <CircularProgress />;
+    return <div />;
   }
 
   const transactionsToDisplay = summedBlocks.slice(0, 50);

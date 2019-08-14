@@ -17,7 +17,7 @@ const mapState = (state: Blockchain): Blockchain => ({
   blokchain: state.blokchain
 });
 
-const Charts = () => {
+const Charts = (): React.ReactElement => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
   const [dateFrom, setDateFrom] = useState("2019-07-25");
@@ -123,14 +123,14 @@ const Charts = () => {
 
   const setLoaderFalse = (): void => {
     dispatch({
-      type: 'LOADER_STATE',
+      type: "LOADER_STATE",
       show: false
     });
   };
 
   const setLoaderTrue = (): void => {
     dispatch({
-      type: 'LOADER_STATE',
+      type: "LOADER_STATE",
       show: true
     });
   };
@@ -227,10 +227,12 @@ const Charts = () => {
           />
           <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
-            <Select value={select} onChange={(e) => {
-              setTimeout(() => handleChartChange(e), 100);
-            }
-            }>
+            <Select
+              value={select}
+              onChange={e => {
+                setTimeout(() => handleChartChange(e), 100);
+              }}
+            >
               <MenuItem value="transactions">Transactions</MenuItem>
               <MenuItem value="currency">Currency</MenuItem>
               <MenuItem value="buyers">Buyers</MenuItem>
