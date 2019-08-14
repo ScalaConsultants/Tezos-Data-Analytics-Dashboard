@@ -10,10 +10,10 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as LoaderActions from "../../store/actions/loader";
 
-import { Config, State, EventTarget } from './types';
+import { Blockchain, EventTarget, Block } from './types';
 import { convertTimeStampToHour, convertTimeStamp, getDayTime, selectWhichDayTime, convertDateArray } from './helpers';
 
-const mapState = (state: State): State => ({
+const mapState = (state: Blockchain): Blockchain => ({
   blokchain: state.blokchain
 });
 
@@ -37,18 +37,18 @@ const Charts = () => {
   const [select, setSelect] = useState("transactions");
   const [donutData, setDonutData] = useState([10, 40, 80, 200]);
 
-  const filterChart = (blokchain: any, chartType: string): void => {
+  const filterChart = (blokchain: Array<Block>, chartType: string): void => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
-    const chainArray: any = [];
-    let donutArray: any = [0, 0, 0, 0];
+    const chainArray: Array<number> = [];
+    let donutArray: Array<number> = [0, 0, 0, 0];
 
-    dateArray.forEach((dateStamp: any) => {
-      let elements = 0;
-      let tempArray = [];
-      let previousEl = 0;
-      blokchain.forEach((item: any) => {
+    dateArray.forEach((dateStamp: string) => {
+      let elements:number = 0;
+      let tempArray: Array<number> = [];
+      let previousEl:number = 0;
+      blokchain.forEach((item: Block) => {
         const timeStampConverted = convertTimeStamp(item.timestamp);
         const timeStampHours = convertTimeStampToHour(item.timestamp);
         const dayTime = getDayTime(timeStampHours);
