@@ -5,22 +5,16 @@ import {
   ConseilQueryBuilder,
   ConseilSortDirection
 } from "conseiljs";
+import apiConfig from "./api-config";
 
 import * as blokchainActions from "../actions/blokchain";
+import { Block } from "../reducers/blokchain-blocks";
+
+const consecutiveFetchAmount = 100;
 
 function getLastTransaction(state: any): any {
-  return state.blokchain[state.blokchain.length - 1];
+  return state.blokchain.blocks[state.blokchain.blocks.length - 1];
 }
-
-const conseilServerInfo = {
-  url: `${process.env.REACT_APP_CONSEIL_URL}`,
-  apiKey: `${process.env.REACT_APP_CONSEIL_KEY}`
-};
-
-const platform = "tezos";
-const network = "alphanet";
-const entity = "operations";
-const consecutiveFetchAmount = 100;
 
 const fetchMoreTransactionsRequest = async (): Promise<any> => {
   console.log("Fetching more from counselijs");
@@ -61,10 +55,10 @@ const fetchMoreTransactionsRequest = async (): Promise<any> => {
   );
 
   const result = await ConseilDataClient.executeEntityQuery(
-    conseilServerInfo,
-    platform,
-    network,
-    entity,
+    apiConfig.conseilServerInfo,
+    apiConfig.platform,
+    apiConfig.network,
+    apiConfig.entity,
     transactionQuery
   );
   const transactions = result.sort(
@@ -76,15 +70,16 @@ const fetchMoreTransactionsRequest = async (): Promise<any> => {
 
 export function* doFetchMoreTransactions(): any {
   const lastTransactionFromState = yield select(getLastTransaction);
+  console.log(lastTransactionFromState);
 
   const response = yield call(fetchMoreTransactionsRequest);
 
   // Compare timestamps and blockchain_level of the last transaction in current state to the transactions received from api
   const sortedTransactions = response.sort(
-    (a: any, b: any): number => a.timestamp - b.timestamp // From oldest to newest
+    (a: Block, b: Block): number => a.timestamp - b.timestamp // From oldest to newest
   );
   const startIndex = sortedTransactions.findIndex(
-    (st: any): boolean => st.timestamp > lastTransactionFromState.timestamp
+    (st: Block): boolean => st.timestamp > lastTransactionFromState.timestamp
   );
 
   // If api returned newer transactions
@@ -93,6 +88,8 @@ export function* doFetchMoreTransactions(): any {
       startIndex,
       consecutiveFetchAmount
     );
+    console.log(`Found ${newTransactions.length} new transactions.`);
+    console.log(newTransactions);
     yield put(blokchainActions.BlokchainSetMoreTransactions(newTransactions));
   } else {
     console.log("There were no new transactions.");

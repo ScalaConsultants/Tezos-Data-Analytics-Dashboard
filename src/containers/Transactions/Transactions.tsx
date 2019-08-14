@@ -26,7 +26,7 @@ type Order = "asc" | "desc";
 type OrderBy = string;
 
 const mapState = (state: any) => ({
-  blokchain: state.blokchain
+  blokchain: state.blokchain.blocks
 });
 
 const Transactions = (): React.ReactElement => {

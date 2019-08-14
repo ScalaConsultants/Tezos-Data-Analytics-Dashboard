@@ -1,7 +1,7 @@
 import { takeEvery, fork } from "redux-saga/effects";
 import * as blokchainActions from "../actions/blokchain";
 import * as blokchainSagas from "./blokchain";
-import * as blokchainIntervalSagas from "./blokchainInterval";
+import * as blokchainIntervalSagas from "./blokchain-interval";
 
 export function* startup(): any {
   // yield fork(checkAuthenticated);

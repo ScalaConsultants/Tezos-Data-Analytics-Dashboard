@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { blokchain } from "./reducers/blokchain";
+import blokchain from "./reducers/blokchain";
 import { loader } from "./reducers/loader";
 
 const rootReducer = combineReducers({
