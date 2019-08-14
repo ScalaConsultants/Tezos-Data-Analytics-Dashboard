@@ -8,13 +8,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import * as LoaderActions from "../../store/actions/loader";
 
-import { Blockchain, EventTarget, Block } from './types';
+import { Blockchain, EventTarget, Block, State } from './types';
 import { convertTimeStampToHour, convertTimeStamp, getDayTime, selectWhichDayTime, convertDateArray } from './helpers';
 
-const mapState = (state: Blockchain): Blockchain => ({
-  blokchain: state.blokchain
+const mapState = (state: State): Blockchain => ({
+  blokchain: state.blokchain.blocks
 });
 
 const Charts = (): React.ReactElement => {
@@ -49,9 +48,9 @@ const Charts = (): React.ReactElement => {
       let tempArray: Array<number> = [];
       let previousEl:number = 0;
       blokchain.forEach((item: Block) => {
-        const timeStampConverted = convertTimeStamp(item.timestamp);
-        const timeStampHours = convertTimeStampToHour(item.timestamp);
-        const dayTime = getDayTime(timeStampHours);
+        const timeStampConverted:string = convertTimeStamp(item.timestamp);
+        const timeStampHours:number = convertTimeStampToHour(item.timestamp);
+        const dayTime:string = getDayTime(timeStampHours);
 
         if (timeStampConverted === dateStamp) {
           switch (chartType) {
