@@ -6,16 +6,9 @@ import {
   ConseilSortDirection
 } from "conseiljs";
 
+import apiConfig from "./api-config";
 import * as blokchainActions from "../actions/blokchain";
 
-const conseilServerInfo = {
-  url: `${process.env.REACT_APP_CONSEIL_URL}`,
-  apiKey: `${process.env.REACT_APP_CONSEIL_KEY}`
-};
-
-const platform = "tezos";
-const network = "alphanet";
-const entity = "operations";
 const initialFetchAmount = 100000;
 
 const fetchTransactionsRequest = async (): Promise<any> => {
@@ -57,10 +50,10 @@ const fetchTransactionsRequest = async (): Promise<any> => {
   );
 
   const result = await ConseilDataClient.executeEntityQuery(
-    conseilServerInfo,
-    platform,
-    network,
-    entity,
+    apiConfig.conseilServerInfo,
+    apiConfig.platform,
+    apiConfig.network,
+    apiConfig.entity,
     transactionQuery
   );
   const transactions = result.sort(

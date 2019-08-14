@@ -5,6 +5,7 @@ export const BLOKCHAIN_FETCH_MORE_TRANSACTIONS =
   "BLOKCHAIN_FETCH_MORE_TRANSACTIONS";
 export const BLOKCHAIN_SET_MORE_TRANSACTIONS =
   "BLOKCHAIN_SET_MORE_TRANSACTIONS";
+export const BLOKCHAIN_SUM_TRANSACTIONS = "BLOKCHAIN_SUM_TRANSACTIONS";
 
 interface ActionType {
   type: string;
@@ -22,7 +23,9 @@ export const BlokchainFetchTransactions = (): ActionType => ({
   type: BLOKCHAIN_FETCH_TRANSACTIONS
 });
 
-export const BlokchainSetTransactions = (transactions: any): any => ({
+export const BlokchainSetTransactions = (
+  transactions: any
+): FetchTransactionsAction => ({
   type: BLOKCHAIN_SET_TRANSACTIONS,
   transactions: transactions
 });
