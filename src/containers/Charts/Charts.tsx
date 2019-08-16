@@ -9,8 +9,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-import { Blockchain, EventTarget, Block, State } from './types';
-import { convertTimeStampToHour, convertTimeStamp, getDayTime, selectWhichDayTime, convertDateArray } from './helpers';
+import { Blockchain, Block, State, EventTarget } from "../../types";
+import {
+  convertTimeStampToHour,
+  convertTimeStamp,
+  getDayTime,
+  selectWhichDayTime,
+  convertDateArray
+} from "./helpers";
 
 const mapState = (state: State): Blockchain => ({
   blokchain: state.blokchain.blocks
@@ -36,21 +42,21 @@ const Charts = (): React.ReactElement => {
   const [select, setSelect] = useState("transactions");
   const [donutData, setDonutData] = useState([10, 40, 80, 200]);
 
-  const filterChart = (blokchain: Array<Block>, chartType: string): void => {
+  const filterChart = (blokchain: Block[], chartType: string): void => {
     const dateArray = convertDateArray(dateFrom, dateTo);
     setLabel(dateArray);
 
-    const chainArray: Array<number> = [];
-    let donutArray: Array<number> = [0, 0, 0, 0];
+    const chainArray: number[] = [];
+    let donutArray: number[] = [0, 0, 0, 0];
 
-    dateArray.forEach((dateStamp: string) => {
-      let elements:number = 0;
-      let tempArray: Array<number> = [];
-      let previousEl:number = 0;
-      blokchain.forEach((item: Block) => {
-        const timeStampConverted:string = convertTimeStamp(item.timestamp);
-        const timeStampHours:number = convertTimeStampToHour(item.timestamp);
-        const dayTime:string = getDayTime(timeStampHours);
+    dateArray.forEach((dateStamp: string): void => {
+      let elements = 0;
+      let tempArray: number[] = [];
+      let previousEl = 0;
+      blokchain.forEach((item: Block): void => {
+        const timeStampConverted: string = convertTimeStamp(item.timestamp);
+        const timeStampHours: number = convertTimeStampToHour(item.timestamp);
+        const dayTime: string = getDayTime(timeStampHours);
 
         if (timeStampConverted === dateStamp) {
           switch (chartType) {
@@ -112,11 +118,11 @@ const Charts = (): React.ReactElement => {
     setLoaderFalse();
   };
 
-  const triggerSetDateFrom = (e: EventTarget): void => {
+  const triggerSetDateFrom = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setDateFrom(e.target.value);
   };
 
-  const triggerSetDateTo = (e: EventTarget): void => {
+  const triggerSetDateTo = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setDateTo(e.target.value);
   };
 
@@ -172,7 +178,7 @@ const Charts = (): React.ReactElement => {
     }
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     filterChart(blokchain, config.chartType);
   }, [dateTo, dateFrom, config, blokchain]);
 
@@ -211,7 +217,9 @@ const Charts = (): React.ReactElement => {
             label="Date From"
             type="date"
             name="dateFrom"
-            onChange={e => triggerSetDateFrom(e)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              triggerSetDateFrom(e)
+            }
             defaultValue="2019-07-25"
             style={{ width: "33%" }}
           />
@@ -221,7 +229,9 @@ const Charts = (): React.ReactElement => {
             type="date"
             name="dateTo"
             defaultValue="2019-08-15"
-            onChange={e => triggerSetDateTo(e)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              triggerSetDateTo(e)
+            }
             style={{ width: "33%" }}
           />
           <FormControl style={{ width: "33%" }}>

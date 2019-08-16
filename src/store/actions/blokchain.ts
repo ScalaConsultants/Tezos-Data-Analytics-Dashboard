@@ -1,3 +1,5 @@
+import { FetchTransactionsAction, ActionType } from "../../types";
+
 export const BLOKCHAIN_FETCH_TRANSACTIONS = "BLOKCHAIN_FETCH_TRANSACTIONS";
 export const BLOKCHAIN_FLUSH_TRANSACTIONS = "BLOKCHAIN_FLUSH_TRANSACTIONS";
 export const BLOKCHAIN_SET_TRANSACTIONS = "BLOKCHAIN_SET_TRANSACTIONS";
@@ -6,14 +8,6 @@ export const BLOKCHAIN_FETCH_MORE_TRANSACTIONS =
 export const BLOKCHAIN_SET_MORE_TRANSACTIONS =
   "BLOKCHAIN_SET_MORE_TRANSACTIONS";
 export const BLOKCHAIN_SUM_TRANSACTIONS = "BLOKCHAIN_SUM_TRANSACTIONS";
-
-interface ActionType {
-  type: string;
-}
-
-interface FetchTransactionsAction extends ActionType {
-  transactions: any[];
-}
 
 export const BlokchainFlushTransactions = (): ActionType => ({
   type: BLOKCHAIN_FLUSH_TRANSACTIONS

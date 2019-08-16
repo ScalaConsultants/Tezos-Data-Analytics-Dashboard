@@ -5,21 +5,16 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-
-interface Props {
-  label: string;
-  date: Date | null;
-  handleDateChange: (date: Date | null) => void;
-}
+import { DatePickerProps } from "../../types";
 
 /**
  * This component is used in `LiveChart` if you need for reference.
  */
-export default function MaterialUIPickers({
+export default function DatePicker({
   label,
   date,
   handleDateChange
-}: Props): React.ReactElement {
+}: DatePickerProps): React.ReactElement {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
