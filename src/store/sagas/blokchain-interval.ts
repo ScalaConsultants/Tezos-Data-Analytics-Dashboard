@@ -8,11 +8,11 @@ import {
 import apiConfig from "./api-config";
 
 import * as blokchainActions from "../actions/blokchain";
-import { Block } from "../reducers/blokchain-blocks";
+import { Block } from "../../types";
 
 const consecutiveFetchAmount = 100;
 
-function getLastTransaction(state: any): any {
+function getLastTransaction(state: any): Block {
   return state.blokchain.blocks[state.blokchain.blocks.length - 1];
 }
 

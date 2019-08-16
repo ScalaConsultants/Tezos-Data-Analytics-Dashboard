@@ -3,20 +3,11 @@ import {
   BLOKCHAIN_FLUSH_TRANSACTIONS,
   BLOKCHAIN_SET_MORE_TRANSACTIONS
 } from "../actions/blokchain";
+import { Block } from "../../types";
 
-export interface Block {
-  source: string;
-  timestamp: number;
-  block_leve: number;
-  amount: number;
-  counter: number;
-  destination: string;
-  fee: number;
-}
+const initState: Block[] = [];
 
-const initState: [] = [];
-
-export const blocks = (state = initState, action: any): any => {
+export const blocks = (state = initState, action: any): Block[] => {
   switch (action.type) {
     case BLOKCHAIN_FLUSH_TRANSACTIONS:
       return initState;
