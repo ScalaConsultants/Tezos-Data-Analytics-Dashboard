@@ -118,11 +118,13 @@ const Charts = (): React.ReactElement => {
     setLoaderFalse();
   };
 
-  const triggerSetDateFrom = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const triggerSetDateFrom = (e:React.ChangeEvent<HTMLInputElement>): void => {
+    setLoaderTrue();
     setDateFrom(e.target.value);
   };
 
   const triggerSetDateTo = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setLoaderTrue();
     setDateTo(e.target.value);
   };
 
@@ -217,9 +219,10 @@ const Charts = (): React.ReactElement => {
             label="Date From"
             type="date"
             name="dateFrom"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-              triggerSetDateFrom(e)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+              e.persist();
+              setTimeout(() => triggerSetDateFrom(e), 100);              
+            }}
             defaultValue="2019-07-25"
             style={{ width: "33%" }}
           />
@@ -229,16 +232,18 @@ const Charts = (): React.ReactElement => {
             type="date"
             name="dateTo"
             defaultValue="2019-08-15"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-              triggerSetDateTo(e)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+              e.persist();
+              setTimeout(() =>  triggerSetDateTo(e), 100);  
+            }}
             style={{ width: "33%" }}
           />
           <FormControl style={{ width: "33%" }}>
             <InputLabel>Select chart</InputLabel>
             <Select
               value={select}
-              onChange={e => {
+              onChange={(e:any) => {
+                e.persist();
                 setTimeout(() => handleChartChange(e), 100);
               }}
             >
