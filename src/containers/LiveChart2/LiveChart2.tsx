@@ -16,7 +16,7 @@ function calculateSize(max: number, transactions: number): number {
 }
 
 const mapState = (state: any): any => ({
-  blokchain: state.blokchain
+  blokchain: state.blokchain.blocks
 });
 
 function LiveChart2(): React.ReactElement {
@@ -26,7 +26,9 @@ function LiveChart2(): React.ReactElement {
   if (!blokchain.length) return <div />;
 
   const summedTransactions = blokchain.reduce((acc: any, next: any): any => {
-    const foundIndex = acc.findIndex((a: any) => a.destination === next.destination);
+    const foundIndex = acc.findIndex(
+      (a: any) => a.destination === next.destination
+    );
     if (foundIndex !== -1) {
       acc[foundIndex].transactions++;
     } else {
