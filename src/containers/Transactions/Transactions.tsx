@@ -48,8 +48,6 @@ const Transactions = (): React.ReactElement => {
     handleRequestSort(event, property);
   };
 
-
-
   const timestampToDate = (timestamp: number) => {
     const newDate = new Date(timestamp);
     const formattedDate =
