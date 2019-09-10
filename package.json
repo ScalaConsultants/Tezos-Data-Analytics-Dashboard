@@ -17,6 +17,7 @@
     "chart.js": "^2.8.0",
     "conseiljs": "0.2.2",
     "eslint-plugin-react-hooks": "^1.6.1",
+    "git": "^0.1.5",
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.6",
     "react-datepicker": "^2.8.0",
