@@ -15,7 +15,8 @@ import {
   convertTimeStamp,
   getDayTime,
   selectWhichDayTime,
-  convertDateArray
+  convertDateArray,
+  getDate
 } from "./helpers";
 
 const mapState = (state: State): Blockchain => ({
@@ -25,8 +26,8 @@ const mapState = (state: State): Blockchain => ({
 const Charts = (): React.ReactElement => {
   const dispatch = useDispatch();
   const { blokchain } = useMappedState(mapState);
-  const [dateFrom, setDateFrom] = useState("2019-07-25");
-  const [dateTo, setDateTo] = useState("2019-08-15");
+  const [dateFrom, setDateFrom] = useState(getDate(7));
+  const [dateTo, setDateTo] = useState(getDate(0));
   const [label, setLabel] = useState([
     "19-04-2019",
     "20-04-2019",
@@ -223,7 +224,7 @@ const Charts = (): React.ReactElement => {
               e.persist();
               setTimeout(() => triggerSetDateFrom(e), 100);              
             }}
-            defaultValue="2019-07-25"
+            defaultValue={getDate(7)}
             style={{ width: "33%" }}
           />
           <TextField
@@ -231,7 +232,7 @@ const Charts = (): React.ReactElement => {
             label="Date To"
             type="date"
             name="dateTo"
-            defaultValue="2019-08-15"
+            defaultValue={getDate(0)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
               e.persist();
               setTimeout(() =>  triggerSetDateTo(e), 100);  

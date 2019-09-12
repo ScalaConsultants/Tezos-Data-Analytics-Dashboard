@@ -99,3 +99,10 @@ export const convertDateArray = (
 
   return listDate;
 };
+
+export const getDate = (days:any):string => {
+  const date = new Date();
+  const last = new Date(date.getTime() - (days * 24 * 60 * 60 * 1000));
+  const data = last.toJSON().slice(0,10).replace(/-/g,'-');
+  return data.toString();
+};
