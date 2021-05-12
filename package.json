@@ -14,7 +14,7 @@
     "@types/react-datepicker": "^2.8.1",
     "@types/react-dom": "^16.8.5",
     "@types/react-router-dom": "^4.3.4",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "conseiljs": "0.2.2",
     "eslint-plugin-react-hooks": "^1.6.1",
     "git": "^0.1.5",
